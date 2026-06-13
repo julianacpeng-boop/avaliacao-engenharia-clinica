@@ -1,23 +1,20 @@
-/* RESET */
+/* BASE */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Arial, sans-serif;
+  font-family: Arial;
 }
 
-/* FUNDO */
 body {
-  background: #eef2f7;
+  background: #eef3f8;
 }
 
-/* APP CONTAINER */
+/* APP */
 .container {
-  width: 100%;
   max-width: 420px;
   margin: auto;
-  padding: 15px;
-  padding-bottom: 80px;
+  padding-bottom: 70px;
 }
 
 /* TELAS */
@@ -29,77 +26,75 @@ body {
   display: block;
 }
 
-/* TÍTULO */
-h2 {
-  text-align: center;
-  margin-bottom: 15px;
-  color: #1f2d3d;
+/* CARD HOSPITALAR */
+.card {
+  background: #fff;
+  margin: 15px;
+  padding: 15px;
+  border-radius: 14px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
 }
 
 /* INPUTS */
 input, textarea {
   width: 100%;
   padding: 12px;
-  margin-bottom: 10px;
+  margin-top: 8px;
   border-radius: 10px;
   border: 1px solid #ddd;
-  outline: none;
 }
 
-/* BOTÕES */
+/* BOTÃO */
 button {
   width: 100%;
   padding: 14px;
-  background: #1976d2;
+  margin-top: 10px;
+  background: #1565c0;
   color: white;
   border: none;
-  border-radius: 12px;
-  margin-top: 10px;
+  border-radius: 10px;
 }
 
 /* ESTRELAS */
-.estrela {
+.estrelas {
   font-size: 30px;
+  margin: 10px 0;
   color: #ccc;
-  cursor: pointer;
 }
 
-.estrela.ativa {
+.estrelas span.ativa {
   color: gold;
 }
 
 /* PENDÊNCIAS */
-.pendencia {
-  background: white;
+.item {
+  background: #f7f9fc;
   padding: 10px;
-  border-radius: 10px;
-  margin-bottom: 10px;
   border-left: 4px solid #ff9800;
+  margin-bottom: 10px;
+  border-radius: 8px;
 }
 
-/* MENU INFERIOR */
+/* MENU PROFISSIONAL */
 .menu {
   position: fixed;
   bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
   width: 100%;
   max-width: 420px;
   display: flex;
-  background: white;
+  background: #fff;
   border-top: 1px solid #ddd;
 }
 
 .menu button {
   flex: 1;
-  padding: 12px;
-  border: none;
   background: none;
-  font-size: 13px;
-  color: #777;
+  border: none;
+  padding: 12px;
+  color: #666;
 }
 
 .menu button.ativo {
-  color: #1976d2;
+  color: #1565c0;
   font-weight: bold;
 }
