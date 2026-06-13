@@ -1,1 +1,237 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
 
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Avaliação Engenharia Clínica</title>
+
+<link rel="stylesheet" href="style.css">
+
+<link rel="manifest" href="manifest.json">
+
+<meta name="theme-color" content="#0d6efd">
+
+</head>
+
+<body>
+
+<div class="app">
+
+    <div class="topo">
+
+        <div class="logo">🏥</div>
+
+        <div>
+            <h1>Engenharia Clínica</h1>
+            <span>Sistema de Avaliação</span>
+        </div>
+
+    </div>
+
+    <!-- TELA 1 -->
+
+    <div id="tela1" class="card">
+
+        <h2>📋 Encerramento do Atendimento</h2>
+
+        <label>Número do Chamado</label>
+
+        <input
+            type="text"
+            id="chamado"
+            placeholder="Ex: 12345">
+
+        <label>Técnico Responsável</label>
+
+        <input
+            type="text"
+            id="tecnico"
+            placeholder="Nome do técnico">
+
+        <button
+            class="btn-primary"
+            onclick="concluirAtendimento()">
+
+            Concluir Atendimento
+
+        </button>
+
+    </div>
+
+    <!-- TELA 2 -->
+
+    <div id="tela2" class="card hidden">
+
+        <h2>✅ Atendimento Concluído</h2>
+
+        <div class="info-box">
+
+            <p>
+                <strong>Chamado:</strong>
+                <span id="infoChamado"></span>
+            </p>
+
+            <p>
+                <strong>Técnico:</strong>
+                <span id="infoTecnico"></span>
+            </p>
+
+            <p>
+                <strong>Data:</strong>
+                <span id="infoData"></span>
+            </p>
+
+            <p>
+                <strong>Hora:</strong>
+                <span id="infoHora"></span>
+            </p>
+
+        </div>
+
+        <button
+            class="btn-primary"
+            onclick="gerarQRCode()">
+
+            📱 Gerar QR Code
+
+        </button>
+
+        <button
+            class="btn-success"
+            onclick="abrirTelaAvaliacao()">
+
+            ⭐ Avaliar Neste Dispositivo
+
+        </button>
+
+        <button
+            class="btn-secondary"
+            onclick="abrirPendentes()">
+
+            📤 Avaliações Pendentes
+
+        </button>
+
+    </div>
+
+    <!-- TELA 3 -->
+
+    <div id="tela3" class="card hidden">
+
+        <h2>📱 QR Code</h2>
+
+        <div class="qr-area">
+
+            <img id="qrCodeImg">
+
+        </div>
+
+        <p class="texto-centro">
+
+            Escaneie para avaliar
+
+        </p>
+
+        <button
+            class="btn-secondary"
+            onclick="mostrarTela('tela2')">
+
+            Voltar
+
+        </button>
+
+    </div>
+
+    <!-- TELA 4 -->
+
+    <div id="tela4" class="card hidden">
+
+        <h2>⭐ Avaliação</h2>
+
+        <div class="info-box">
+
+            <p>
+                <strong>Chamado:</strong>
+                <span id="avChamado"></span>
+            </p>
+
+            <p>
+                <strong>Técnico:</strong>
+                <span id="avTecnico"></span>
+            </p>
+
+        </div>
+
+        <div class="estrelas">
+
+            <span class="estrela" onclick="selecionarNota(1)">★</span>
+            <span class="estrela" onclick="selecionarNota(2)">★</span>
+            <span class="estrela" onclick="selecionarNota(3)">★</span>
+            <span class="estrela" onclick="selecionarNota(4)">★</span>
+            <span class="estrela" onclick="selecionarNota(5)">★</span>
+
+        </div>
+
+        <input
+            type="hidden"
+            id="notaSelecionada"
+            value="0">
+
+        <label>Comentário</label>
+
+        <textarea
+            id="comentario"
+            rows="4"
+            placeholder="Digite sua avaliação">
+        </textarea>
+
+        <button
+            class="btn-success"
+            onclick="enviarAvaliacao()">
+
+            Enviar Avaliação
+
+        </button>
+
+    </div>
+
+    <!-- TELA 5 -->
+
+    <div id="tela5" class="card hidden">
+
+        <h2>📤 Avaliações Pendentes</h2>
+
+        <div id="listaPendentes">
+
+        </div>
+
+        <button
+            class="btn-success"
+            onclick="enviarTodasPendentes()">
+
+            Enviar Todas
+
+        </button>
+
+        <button
+            class="btn-secondary"
+            onclick="mostrarTela('tela2')">
+
+            Voltar
+
+        </button>
+
+    </div>
+
+</div>
+
+<div id="toast"></div>
+
+<script src="app.js"></script>
+
+</body>
+
+</html>
