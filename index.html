@@ -53,8 +53,13 @@
 
       <h2>Avaliação</h2>
 
-      <div id="infoChamado"></div>
-      <div id="infoDataHora"></div>
+  <div class="card-resumo">
+
+  <h3>Resumo do Atendimento</h3>
+
+  <div id="resumoChamado"></div>
+
+</div>
 
       <div class="estrelas">
         <span onclick="nota(1)">★</span>
@@ -125,13 +130,34 @@ function irOpcoes(){
 function avaliarTablet(){
   abrir("tela3");
 
-  document.getElementById("infoChamado").innerHTML =
-    "Chamado: <b>" + document.getElementById("chamado").value + "</b><br>" +
-    "Técnico: <b>" + document.getElementById("tecnico").value + "</b>";
+  const chamado = document.getElementById("chamado").value;
+  const tecnico = document.getElementById("tecnico").value;
+  const data = document.getElementById("data").value;
+  const hora = document.getElementById("hora").value;
 
-  document.getElementById("infoDataHora").innerHTML =
-    "Data: <b>" + document.getElementById("data").value + "</b><br>" +
-    "Hora: <b>" + document.getElementById("hora").value + "</b>";
+  document.getElementById("resumoChamado").innerHTML = `
+    
+    <div class="resumo-item">
+      <span>📄 Chamado:</span>
+      <b>${chamado}</b>
+    </div>
+
+    <div class="resumo-item">
+      <span>👨‍🔧 Técnico:</span>
+      <b>${tecnico}</b>
+    </div>
+
+    <div class="resumo-item">
+      <span>📅 Data:</span>
+      <b>${data}</b>
+    </div>
+
+    <div class="resumo-item">
+      <span>⏰ Hora:</span>
+      <b>${hora}</b>
+    </div>
+
+  `;
 }
 
 /* 📷 QR CODE (simples por enquanto) */
