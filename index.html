@@ -6,108 +6,110 @@
   
 </head>
   <style>
-   /* RESET */
+   /* ===== RESET ===== */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: system-ui, -apple-system, Arial;
+  font-family: "Inter", system-ui, Arial;
 }
 
-/* FUNDO REAL (APP WEB DE VERDADE) */
+/* ===== FUNDO PROFISSIONAL ===== */
 body {
-  width: 100%;
-  min-height: 100vh;
-  background: #f5f7fb;
-  -webkit-text-size-adjust: 100%;
-}
-
-/* CONTAINER OCUPA TELA TODA (A14 20:9 PERFEITO) */
-.container {
-  width: 100%;
-  min-height: 100vh;
-  background: #f5f7fb;
-  padding: 16px;
-  padding-bottom: 90px;
-}
-
-/* TELAS */
-.tela {
-  display: none;
-}
-
-.ativa {
-  display: block;
-}
-
-/* CARD */
-.card {
-  background: #ffffff;
-  border-radius: 14px;
-  padding: 16px;
-  margin-bottom: 14px;
-  box-shadow: 0 6px 16px rgba(0,0,0,0.06);
-  border: 1px solid #eef2f7;
-}
-
-/* TÍTULO */
-h2 {
-  font-size: 18px;
-  text-align: center;
-  margin-bottom: 12px;
+  background: #eef2f7;
   color: #0f172a;
 }
 
-/* INPUTS */
+/* ===== CONTAINER LIMPO ===== */
+.container {
+  width: 100%;
+  min-height: 100vh;
+  padding: 18px;
+  padding-bottom: 90px;
+}
+
+/* ===== TÍTULOS MAIS FORTES ===== */
+h2 {
+  font-size: 20px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 14px;
+  color: #0f172a;
+}
+
+/* ===== CARD PREMIUM ===== */
+.card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 18px;
+  margin-bottom: 14px;
+
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+}
+
+/* ===== INPUTS ESTILO SISTEMA ===== */
 input, textarea {
   width: 100%;
   padding: 14px;
   margin-top: 10px;
+
   border-radius: 12px;
-  border: 1px solid #e2e8f0;
-  outline: none;
+  border: 1px solid #dbe2ea;
+
   font-size: 15px;
+  outline: none;
   background: #fff;
+}
+
+input:focus, textarea:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
 }
 
 textarea {
   min-height: 90px;
-  resize: none;
 }
 
-/* BOTÃO APP */
+/* ===== BOTÃO PROFISSIONAL ===== */
 button {
   width: 100%;
   padding: 14px;
   margin-top: 12px;
-  border: none;
-  border-radius: 14px;
 
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  border: none;
+  border-radius: 12px;
+
+  background: #2563eb;
   color: white;
 
   font-size: 15px;
   font-weight: 600;
 
-  box-shadow: 0 8px 18px rgba(37,99,235,0.25);
+  cursor: pointer;
   transition: 0.2s;
+}
+
+button:hover {
+  background: #1d4ed8;
 }
 
 button:active {
   transform: scale(0.98);
 }
 
-/* ESTRELAS */
+/* ===== ESTRELAS MAIS PROFISSIONAIS ===== */
 .estrelas {
   display: flex;
   justify-content: center;
-  gap: 6px;
-  font-size: 34px;
-  margin: 12px 0;
+  gap: 8px;
+  font-size: 32px;
+  margin: 14px 0;
 }
 
 .estrelas span {
   color: #cbd5e1;
+  cursor: pointer;
   transition: 0.2s;
 }
 
@@ -115,14 +117,19 @@ button:active {
   color: #fbbf24;
 }
 
-/* RESUMO */
+/* ===== RESUMO ===== */
 .card-resumo {
-  background: #fff;
+  background: #f8fafc;
   border-radius: 14px;
-  padding: 16px;
-  margin: 10px 0 20px;
-  box-shadow: 0 6px 16px rgba(0,0,0,0.05);
-  border-left: 4px solid #2563eb;
+  padding: 14px;
+  border: 1px solid #e5e7eb;
+  margin-bottom: 16px;
+}
+
+.card-resumo h3 {
+  font-size: 15px;
+  margin-bottom: 10px;
+  color: #1e293b;
 }
 
 .resumo-item {
@@ -130,7 +137,7 @@ button:active {
   justify-content: space-between;
   padding: 8px 0;
   font-size: 14px;
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid #eaeef3;
 }
 
 .resumo-item:last-child {
@@ -141,17 +148,19 @@ button:active {
   color: #64748b;
 }
 
-/* PENDÊNCIAS */
+/* ===== PENDÊNCIAS (IMPORTANTE) ===== */
 .item {
-  background: #fff;
-  padding: 12px;
+  background: #ffffff;
+  padding: 14px;
   border-radius: 12px;
   margin-bottom: 10px;
+
   border-left: 4px solid #f59e0b;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.04);
   font-size: 13px;
 }
 
-/* MENU FIXO ANDROID REAL */
+/* ===== MENU PROFISSIONAL ===== */
 .menu {
   position: fixed;
   bottom: 0;
@@ -163,15 +172,15 @@ button:active {
   display: flex;
 
   border-top: 1px solid #e5e7eb;
-  box-shadow: 0 -2px 10px rgba(0,0,0,0.08);
-  z-index: 999;
+  box-shadow: 0 -6px 20px rgba(0,0,0,0.06);
 }
 
 .menu button {
   flex: 1;
   border: none;
   background: none;
-  font-size: 14px;
+
+  font-size: 13px;
   color: #64748b;
 }
 
@@ -180,36 +189,26 @@ button:active {
   font-weight: 700;
 }
 
-/* TOAST */
+/* ===== TOAST ===== */
 .toast {
   position: fixed;
   bottom: 80px;
   left: 50%;
   transform: translateX(-50%);
-  background: #2563eb;
+
+  background: #0f172a;
   color: white;
-  padding: 12px 18px;
-  border-radius: 12px;
-  font-size: 14px;
+
+  padding: 12px 16px;
+  border-radius: 10px;
+
+  font-size: 13px;
   opacity: 0;
-  pointer-events: none;
   transition: 0.3s;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
 .toast.show {
   opacity: 1;
-}
-
-/* AJUSTE A14 / TELAS ALTAS */
-@media screen and (max-aspect-ratio: 9/18) {
-  .card {
-    margin-bottom: 12px;
-  }
-
-  button {
-    padding: 15px;
-  }
 }
   </style>
 
