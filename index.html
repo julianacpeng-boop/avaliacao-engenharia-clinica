@@ -14,21 +14,26 @@
   font-family: system-ui, -apple-system, Arial;
 }
 
-/* FUNDO */
+/* FUNDO ESTILO APP */
 body {
-  background: #e9eff5;
+  background: linear-gradient(180deg, #0f172a, #1e293b);
   display: flex;
   justify-content: center;
 }
 
-/* APP CONTAINER (RESPONSIVO DE VERDADE) */
+/* CONTAINER ESTILO SMARTPHONE */
 .container {
   width: 100%;
-  max-width: 480px;
+  max-width: 420px;
   min-height: 100vh;
-  background: #f5f7fb;
+  background: #f8fafc;
   padding: 16px;
   padding-bottom: 90px;
+
+  border-radius: 24px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 /* TELAS */
@@ -40,13 +45,15 @@ body {
   display: block;
 }
 
-/* CARD PROFISSIONAL */
+/* CARD ESTILO APP */
 .card {
   background: #ffffff;
-  border-radius: 16px;
+  border-radius: 18px;
   padding: 18px;
   margin-bottom: 14px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  border: 1px solid #eef2f7;
 }
 
 /* TÍTULO */
@@ -54,16 +61,16 @@ h2 {
   font-size: 18px;
   text-align: center;
   margin-bottom: 12px;
-  color: #1d2b3a;
+  color: #0f172a;
 }
 
-/* INPUTS MODERNOS */
+/* INPUTS */
 input, textarea {
   width: 100%;
   padding: 14px;
   margin-top: 10px;
   border-radius: 12px;
-  border: 1px solid #e0e6ed;
+  border: 1px solid #e2e8f0;
   outline: none;
   font-size: 15px;
   background: #fff;
@@ -74,17 +81,26 @@ textarea {
   resize: none;
 }
 
-/* BOTÃO */
+/* BOTÃO ESTILO APP */
 button {
   width: 100%;
   padding: 14px;
   margin-top: 12px;
   border: none;
-  border-radius: 12px;
-  background: #1e6bff;
+  border-radius: 14px;
+
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
   color: white;
+
   font-size: 15px;
   font-weight: 600;
+
+  box-shadow: 0 8px 18px rgba(37,99,235,0.3);
+  transition: 0.2s;
+}
+
+button:active {
+  transform: scale(0.98);
 }
 
 /* ESTRELAS */
@@ -97,21 +113,45 @@ button {
 }
 
 .estrelas span {
-  color: #d0d5dd;
+  color: #cbd5e1;
   transition: 0.2s;
 }
 
 .estrelas span.ativa {
-  color: #ffb400;
+  color: #fbbf24;
   transform: scale(1.05);
 }
 
-/* INFO CHAMADO */
-#infoChamado {
-  text-align: center;
+/* RESUMO */
+.card-resumo {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 16px;
+  margin: 10px 0 20px 0;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  border-left: 5px solid #2563eb;
+}
+
+.card-resumo h3 {
+  font-size: 16px;
+  margin-bottom: 12px;
+  color: #0f172a;
+}
+
+.resumo-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
   font-size: 14px;
-  color: #444;
-  margin-bottom: 10px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.resumo-item:last-child {
+  border-bottom: none;
+}
+
+.resumo-item span {
+  color: #64748b;
 }
 
 /* PENDÊNCIAS */
@@ -120,23 +160,28 @@ button {
   padding: 12px;
   border-radius: 12px;
   margin-bottom: 10px;
-  border-left: 4px solid #ff9f1c;
+  border-left: 4px solid #f59e0b;
   font-size: 13px;
 }
 
-/* MENU INFERIOR FIXO (RESPONSIVO REAL) */
+/* MENU INFERIOR ESTILO APP */
 .menu {
   position: fixed;
-  bottom: 0;
+  bottom: 10px;
   left: 50%;
   transform: translateX(-50%);
-  width: 100%;
-  max-width: 480px;
+
+  width: 92%;
+  max-width: 420px;
   height: 64px;
-  background: #ffffff;
+
+  background: rgba(255,255,255,0.9);
+  backdrop-filter: blur(10px);
+
   display: flex;
-  border-top: 1px solid #e6e9ef;
-  box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+  border-radius: 18px;
+
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
 }
 
 /* BOTÕES MENU */
@@ -144,48 +189,18 @@ button {
   flex: 1;
   border: none;
   background: none;
-  font-size: 12px;
-  color: #6b7280;
+
+  font-size: 14px;
+  color: #64748b;
 }
 
 /* ATIVO */
 .menu button.ativo {
-  color: #1e6bff;
+  color: #2563eb;
   font-weight: 700;
 }
-/* CARD RESUMO HOSPITALAR */
-.card-resumo {
-  background: #ffffff;
-  border-radius: 14px;
-  padding: 16px;
-  margin: 10px 0 20px 0;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
-  border-left: 5px solid #1976d2;
-}
 
-.card-resumo h3 {
-  font-size: 16px;
-  margin-bottom: 12px;
-  color: #1d2b3a;
-}
-
-/* LINHAS DO RESUMO */
-.resumo-item {
-  display: flex;
-  justify-content: space-between;
-  padding: 8px 0;
-  font-size: 14px;
-  border-bottom: 1px solid #f0f0f0;
-}
-
-.resumo-item:last-child {
-  border-bottom: none;
-}
-
-.resumo-item span {
-  color: #6b7280;
-}
-/* RESPONSIVIDADE EXTRA */
+/* RESPONSIVO */
 @media (max-width: 380px) {
   h2 {
     font-size: 16px;
@@ -199,12 +214,14 @@ button {
     font-size: 14px;
   }
 }
+
+/* TOAST */
 .toast {
   position: fixed;
   bottom: 80px;
   left: 50%;
   transform: translateX(-50%);
-  background: #1e6bff;
+  background: #2563eb;
   color: white;
   padding: 12px 18px;
   border-radius: 12px;
@@ -215,7 +232,6 @@ button {
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
-/* ativo */
 .toast.show {
   opacity: 1;
 }
