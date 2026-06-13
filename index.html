@@ -2,83 +2,75 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>Avaliação Engenharia Clínica</title>
-
-  <link rel="stylesheet" href="style.css">
+  <title>Teste - Avaliação de Chamados</title>
+  <link rel="stylesheet" href="estilo.css">
 </head>
 
 <body>
 
-<div id="app">
+  <div class="container">
 
-  <!-- MENU -->
-  <div class="menu">
-    <button onclick="mostrar('tela1')">Chamado</button>
-    <button onclick="mostrar('tela5')">Pendências</button>
-  </div>
+    <h2>Registro de Chamados - TESTE</h2>
 
-  <!-- TELA 1 - CHAMADO -->
-  <div class="tela ativa" id="tela1">
+    <label>Número do Chamado</label>
+    <input type="text" id="chamado" placeholder="Ex: 12345">
 
-    <h2>Registro do Chamado</h2>
+    <label>Nome do Técnico</label>
+    <input type="text" id="tecnico" placeholder="Ex: João Silva">
 
-    <input id="chamado" placeholder="Número do chamado">
-    <input id="tecnico" placeholder="Nome do técnico">
+    <label>Data da Conclusão</label>
+    <input type="date" id="data">
 
-    <input id="data" type="date">
-    <input id="hora" type="time">
+    <label>Hora da Conclusão</label>
+    <input type="time" id="hora">
 
-    <button onclick="concluirChamado()">Concluir</button>
+    <button onclick="enviarTeste()">Enviar Teste</button>
 
-  </div>
-
-  <!-- TELA 2 - AÇÕES -->
-  <div class="tela" id="tela2">
-
-    <h2>Ações</h2>
-
-    <button onclick="mostrar('tela4')">Avaliar no Tablet</button>
-    <button onclick="gerarQR()">Gerar QR Code</button>
+    <p id="status"></p>
 
   </div>
 
-  <!-- TELA 3 - QR CODE -->
-  <div class="tela" id="tela3">
+  <script src="app.js"></script>
 
-    <h2>QR Code do Chamado</h2>
+  <script>
+    // preencher data e hora automática
+    window.onload = function () {
+      let agora = new Date();
 
-    <div id="qrcode"></div>
+      document.getElementById("data").value = agora.toISOString().split("T")[0];
 
-    <button onclick="mostrar('tela1')">Novo Chamado</button>
+      document.getElementById("hora").value =
+        agora.getHours().toString().padStart(2, '0') + ":" +
+        agora.getMinutes().toString().padStart(2, '0');
+    }
 
-  </div>
+    function enviarTeste() {
 
-  <!-- TELA 4 - AVALIAÇÃO -->
-  <div class="tela" id="tela4">
+      const dados = {
+        chamado: document.getElementById("chamado").value,
+        tecnico: document.getElementById("tecnico").value,
+        dataConclusao: document.getElementById("data").value,
+        horaConclusao: document.getElementById("hora").value,
+        nota: 5,
+        comentario: "Teste automático do sistema"
+      };
 
-    <h2>Avaliação</h2>
+      fetch("https://script.google.com/macros/s/AKfycby9NyvrwB6FTjGN_n6Y9z8Ig56mdaG0HKgvDdyMNDpmZIZWu93rm-5T-kx30hJq_VYVZA/exec", {
+        method: "POST",
+        body: JSON.stringify(dados)
+      })
+      .then(r => r.text())
+      .then(res => {
+        document.getElementById("status").innerText = "✔ Enviado com sucesso: " + res;
+        console.log(res);
+      })
+      .catch(err => {
+        document.getElementById("status").innerText = "❌ Erro ao enviar";
+        console.error(err);
+      });
 
-    <input id="nota" type="number" min="1" max="5" placeholder="Nota (1 a 5)">
-    <input id="comentario" placeholder="Comentário (opcional)">
-
-    <button onclick="enviarAvaliacao()">Enviar Avaliação</button>
-
-  </div>
-
-  <!-- TELA 5 - PENDÊNCIAS -->
-  <div class="tela" id="tela5">
-
-    <h2>Pendências Offline</h2>
-
-    <div id="pendencias"></div>
-
-    <button onclick="sincronizar()">Enviar Tudo</button>
-
-  </div>
-
-</div>
-
-<script src="app.js"></script>
+    }
+  </script>
 
 </body>
 </html>
