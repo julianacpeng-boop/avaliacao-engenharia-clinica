@@ -172,12 +172,27 @@ function avaliarTablet(){
 /* 📷 QR CODE (simples por enquanto) */
 function gerarQR(){
 
-  const link =
-    window.location.href +
-    "?chamado=" + document.getElementById("chamado").value +
-    "&tec=" + document.getElementById("tecnico").value;
+  const chamado = document.getElementById("chamado").value;
+  const tecnico = document.getElementById("tecnico").value;
+  const data = document.getElementById("data").value;
+  const hora = document.getElementById("hora").value;
 
-  document.getElementById("qr").innerText = link;
+  const baseURL = "https://script.google.com/macros/s/AKfycby9NyvrwB6FTjGN_n6Y9z8Ig56mdaG0HKgvDdyMNDpmZIZWu93rm-5T-kx30hJq_VYVZA/exec";
+
+  const url =
+    baseURL +
+    "?chamado=" + encodeURIComponent(chamado) +
+    "&tecnico=" + encodeURIComponent(tecnico) +
+    "&data=" + encodeURIComponent(data) +
+    "&hora=" + encodeURIComponent(hora);
+
+  const qrImg =
+    "https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=" +
+    encodeURIComponent(url);
+
+  document.getElementById("qr").innerHTML =
+    `<img src="${qrImg}" style="width:220px;height:220px;margin-top:10px;">`;
+
 }
 
 /* ⭐ estrelas */
