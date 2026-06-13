@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>App Avaliação de Chamados</title>
+  <title>Engenharia Clínica - Avaliação</title>
   <link rel="stylesheet" href="./style.css">
 </head>
 
@@ -10,185 +10,177 @@
 
 <div class="container">
 
-  <!-- 🏠 TELA PRINCIPAL -->
+  <!-- 🏥 CHAMADO -->
   <div id="tela1" class="tela ativa">
 
-    <h2>Concluir Chamado</h2>
+    <div class="card">
+      <h2>Concluir Chamado</h2>
 
-    <input id="chamado" placeholder="Número do chamado">
-    <input id="tecnico" placeholder="Nome do técnico">
+      <input id="chamado" placeholder="Número do chamado">
+      <input id="tecnico" placeholder="Nome do técnico">
 
-    <label>Data</label>
-    <input type="date" id="data">
+      <label>Data conclusão</label>
+      <input type="date" id="data">
 
-    <label>Hora</label>
-    <input type="time" id="hora">
+      <label>Hora conclusão</label>
+      <input type="time" id="hora">
 
-    <button onclick="irParaAvaliacao()">Continuar</button>
-
-    <hr style="margin:15px 0;">
-
-    <h3>Avaliação rápida</h3>
-
-    <div>
-      <span class="estrela" onclick="nota(1)">★</span>
-      <span class="estrela" onclick="nota(2)">★</span>
-      <span class="estrela" onclick="nota(3)">★</span>
-      <span class="estrela" onclick="nota(4)">★</span>
-      <span class="estrela" onclick="nota(5)">★</span>
+      <button onclick="irAvaliacao()">Continuar para avaliação</button>
     </div>
-
-    <textarea id="comentario" placeholder="Comentário (opcional)"></textarea>
-
-    <button onclick="enviar()">Enviar Avaliação</button>
 
   </div>
 
-  <!-- 📡 TELA PENDÊNCIAS -->
-  <div id="tela5" class="tela">
+  <!-- ⭐ AVALIAÇÃO -->
+  <div id="tela2" class="tela">
 
-    <h2>Pendências de Envio</h2>
+    <div class="card">
 
-    <div id="listaPendencias"></div>
+      <h2>Avaliação do Atendimento</h2>
 
-    <button onclick="sincronizar()">Sincronizar Agora</button>
+      <div class="info" id="infoChamado"></div>
+
+      <div class="estrelas">
+        <span onclick="nota(1)">★</span>
+        <span onclick="nota(2)">★</span>
+        <span onclick="nota(3)">★</span>
+        <span onclick="nota(4)">★</span>
+        <span onclick="nota(5)">★</span>
+      </div>
+
+      <textarea id="comentario" placeholder="Comentário (opcional)"></textarea>
+
+      <button onclick="enviar()">Enviar avaliação</button>
+
+    </div>
+
+  </div>
+
+  <!-- 📡 PENDÊNCIAS -->
+  <div id="tela3" class="tela">
+
+    <div class="card">
+
+      <h2>Pendências Offline</h2>
+
+      <div id="listaPendencias"></div>
+
+      <button onclick="sincronizar()">Sincronizar dados</button>
+
+    </div>
 
   </div>
 
 </div>
 
-<!-- 🔻 MENU INFERIOR -->
+<!-- MENU -->
 <div class="menu">
 
-  <button onclick="abrirTela('tela1')" id="btnHome" class="ativo">
-    🏠 Principal
-  </button>
-
-  <button onclick="abrirTela('tela5')" id="btnPend">
-    📡 Pendências
-  </button>
+  <button onclick="abrir('tela1')" id="m1" class="ativo">🏥 Chamado</button>
+  <button onclick="abrir('tela2')" id="m2">⭐ Avaliação</button>
+  <button onclick="abrir('tela3')" id="m3">📡 Pendências</button>
 
 </div>
 
 <script>
 let notaSelecionada = 0;
 
-const API_URL = "https://script.google.com/macros/s/AKfycby9NyvrwB6FTjGN_n6Y9z8Ig56mdaG0HKgvDdyMNDpmZIZWu93rm-5T-kx30hJq_VYVZA/exec";
+const API = "https://script.google.com/macros/s/AKfycby9NyvrwB6FTjGN_n6Y9z8Ig56mdaG0HKgvDdyMNDpmZIZWu93rm-5T-kx30hJq_VYVZA/exec";
 
-// 📅 automático
-window.onload = function () {
-
+window.onload = () => {
   let agora = new Date();
 
-  document.getElementById("data").value =
-    agora.toISOString().split("T")[0];
-
+  document.getElementById("data").value = agora.toISOString().split("T")[0];
   document.getElementById("hora").value =
     agora.getHours().toString().padStart(2,'0') + ":" +
     agora.getMinutes().toString().padStart(2,'0');
-}
+};
 
-// 📱 navegação
-function abrirTela(tela) {
+function abrir(tela) {
 
-  document.querySelectorAll(".tela")
-    .forEach(t => t.classList.remove("ativa"));
-
+  document.querySelectorAll(".tela").forEach(t => t.classList.remove("ativa"));
   document.getElementById(tela).classList.add("ativa");
 
-  document.querySelectorAll(".menu button")
-    .forEach(b => b.classList.remove("ativo"));
+  document.querySelectorAll(".menu button").forEach(b => b.classList.remove("ativo"));
 
-  if (tela === "tela1") document.getElementById("btnHome").classList.add("ativo");
-  if (tela === "tela5") document.getElementById("btnPend").classList.add("ativo");
-
-  if (tela === "tela5") mostrarPendencias();
+  if (tela === "tela1") document.getElementById("m1").classList.add("ativo");
+  if (tela === "tela2") document.getElementById("m2").classList.add("ativo");
+  if (tela === "tela3") {
+    document.getElementById("m3").classList.add("ativo");
+    mostrarPendencias();
+  }
 }
 
-// ⭐ estrelas
+function irAvaliacao() {
+  abrir("tela2");
+
+  document.getElementById("infoChamado").innerHTML =
+    "Chamado: <b>" + document.getElementById("chamado").value + "</b><br>" +
+    "Técnico: <b>" + document.getElementById("tecnico").value + "</b>";
+}
+
 function nota(n) {
   notaSelecionada = n;
 
-  document.querySelectorAll(".estrela").forEach((e, i) => {
+  document.querySelectorAll(".estrelas span").forEach((e,i)=>{
     e.classList.toggle("ativa", i < n);
   });
 }
 
-// 📡 enviar
 function enviar() {
 
   const dados = {
     chamado: document.getElementById("chamado").value,
     tecnico: document.getElementById("tecnico").value,
-    dataConclusao: document.getElementById("data").value,
-    horaConclusao: document.getElementById("hora").value,
+    data: document.getElementById("data").value,
+    hora: document.getElementById("hora").value,
     nota: notaSelecionada,
     comentario: document.getElementById("comentario").value
   };
 
   if (!navigator.onLine) {
-    salvarPendente(dados);
+    salvar(dados);
     alert("Sem internet. Salvo em pendências.");
     return;
   }
 
-  fetch(API_URL, {
+  fetch(API, {
     method: "POST",
     body: JSON.stringify(dados)
   })
-  .then(() => alert("Avaliação enviada"))
-  .catch(() => salvarPendente(dados));
+  .then(()=>alert("Avaliação enviada"))
+  .catch(()=>salvar(dados));
 }
 
-// 💾 offline
-function salvarPendente(dados) {
-  let lista = JSON.parse(localStorage.getItem("pendencias")) || [];
+function salvar(dados){
+  let lista = JSON.parse(localStorage.getItem("pend")) || [];
   lista.push(dados);
-  localStorage.setItem("pendencias", JSON.stringify(lista));
+  localStorage.setItem("pend", JSON.stringify(lista));
 }
 
-// 📡 mostrar pendências
-function mostrarPendencias() {
+function mostrarPendencias(){
 
-  let lista = JSON.parse(localStorage.getItem("pendencias")) || [];
+  let lista = JSON.parse(localStorage.getItem("pend")) || [];
 
   document.getElementById("listaPendencias").innerHTML =
-    lista.length === 0
-      ? "<p>Nenhuma pendência</p>"
-      : lista.map(p => `
-          <div class="pendencia">
-            <b>Chamado:</b> ${p.chamado}<br>
-            <b>Técnico:</b> ${p.tecnico}<br>
-            <b>Nota:</b> ${p.nota}
-          </div>
-        `).join("");
+    lista.length ? lista.map(p=>`
+      <div class="item">
+        <b>Chamado:</b> ${p.chamado}<br>
+        <b>Técnico:</b> ${p.tecnico}<br>
+        <b>Nota:</b> ${p.nota}
+      </div>
+    `).join("") : "<p>Nenhuma pendência</p>";
 }
 
-// 🔄 sincronizar
-function sincronizar() {
+function sincronizar(){
 
-  let lista = JSON.parse(localStorage.getItem("pendencias")) || [];
+  let lista = JSON.parse(localStorage.getItem("pend")) || [];
 
-  if (lista.length === 0) {
-    alert("Nada para sincronizar");
-    return;
-  }
-
-  lista.forEach((dados, i) => {
-    fetch(API_URL, {
-      method: "POST",
-      body: JSON.stringify(dados)
-    }).then(() => {
-      lista.splice(i, 1);
-      localStorage.setItem("pendencias", JSON.stringify(lista));
-      mostrarPendencias();
-    });
+  lista.forEach(d=>{
+    fetch(API,{method:"POST",body:JSON.stringify(d)});
   });
-}
 
-// avaliação direta
-function irParaAvaliacao() {
-  alert("Preencha e envie a avaliação abaixo.");
+  localStorage.removeItem("pend");
+  mostrarPendencias();
 }
 </script>
 
