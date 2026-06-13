@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Engenharia Clínica - Avaliação</title>
+  
+
+<style>
+body{
+background:#dfe6ee!important;
+}
+.container{
+max-width:412px!important;
+margin:0 auto!important;
+background:#f7f9fc!important;
+box-shadow:0 0 25px rgba(0,0,0,.15);
+}
+.appbar{
+position:sticky;
+top:0;
+z-index:1000;
+background:#1565c0;
+color:white;
+padding:16px;
+font-weight:700;
+font-size:18px;
+text-align:center;
+border-radius:0 0 18px 18px;
+margin:-16px -16px 16px -16px;
+}
+.card{
+border-radius:20px!important;
+}
+input,textarea,button{
+border-radius:16px!important;
+}
+.menu{
+max-width:412px!important;
+}
+</style>
+
+</head>
+  <style>
+    /* RESET MODERNO */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: system-ui, -apple-system, Arial;
+}
+
+/* FUNDO */
+body {
+  background: #e9eff5;
+  display: flex;
+  justify-content: center;
+}
+
+/* APP CONTAINER (RESPONSIVO DE VERDADE) */
+.container {
+  width: 100%;
+  max-width: 480px;
+  min-height: 100vh;
+  background: #f5f7fb;
+  padding: 16px;
+  padding-bottom: 90px;
+}
+
+/* TELAS */
+.tela {
+  display: none;
+}
+
+.ativa {
+  display: block;
+}
+
+/* CARD PROFISSIONAL */
+.card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 18px;
+  margin-bottom: 14px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+}
+
+/* TÍTULO */
+h2 {
+  font-size: 18px;
+  text-align: center;
+  margin-bottom: 12px;
+  color: #1d2b3a;
+}
+
+/* INPUTS MODERNOS */
+input, textarea {
+  width: 100%;
+  padding: 14px;
+  margin-top: 10px;
+  border-radius: 12px;
+  border: 1px solid #e0e6ed;
+  outline: none;
+  font-size: 15px;
+  background: #fff;
+}
+
+textarea {
+  min-height: 90px;
+  resize: none;
+}
+
+/* BOTÃO */
+button {
+  width: 100%;
+  padding: 14px;
+  margin-top: 12px;
+  border: none;
+  border-radius: 12px;
+  background: #1e6bff;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* ESTRELAS */
+.estrelas {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  font-size: 34px;
+  margin: 12px 0;
+}
+
+.estrelas span {
+  color: #d0d5dd;
+  transition: 0.2s;
+}
+
+.estrelas span.ativa {
+  color: #ffb400;
+  transform: scale(1.05);
+}
+
+/* INFO CHAMADO */
+#infoChamado {
+  text-align: center;
+  font-size: 14px;
+  color: #444;
+  margin-bottom: 10px;
+}
+
+/* PENDÊNCIAS */
+.item {
+  background: #fff;
+  padding: 12px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  border-left: 4px solid #ff9f1c;
+  font-size: 13px;
+}
+
+/* MENU INFERIOR FIXO (RESPONSIVO REAL) */
+.menu{
+  position:fixed;
+  bottom:12px;
+  left:50%;
+  transform:translateX(-50%);
+  width:calc(100% - 24px);
+  max-width:380px;
+  height:70px;
+  background:#fff;
+  border-radius:24px;
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+  box-shadow:0 8px 25px rgba(0,0,0,.15);
+  z-index:999;
+}
+
+.menu button{
+  flex:1;
+  height:100%;
+  border:none;
+  background:none;
+  color:#7b8794;
+  font-size:12px;
+  font-weight:600;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  gap:4px;
+  margin:0;
+  padding:0;
+}
+
+.menu button span{
+  font-size:22px;
+}
+
+.menu button.ativo{
+  color:#1565c0;
+}
+/* CARD RESUMO HOSPITALAR */
+.card-resumo {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 16px;
+  margin: 10px 0 20px 0;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  border-left: 5px solid #1976d2;
+}
+
+.card-resumo h3 {
+  font-size: 16px;
+  margin-bottom: 12px;
+  color: #1d2b3a;
+}
+
+/* LINHAS DO RESUMO */
+.resumo-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  font-size: 14px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.resumo-item:last-child {
+  border-bottom: none;
+}
+
+.resumo-item span {
+  color: #6b7280;
+}
+/* RESPONSIVIDADE EXTRA */
+@media (max-width: 380px) {
+  h2 {
+    font-size: 16px;
+  }
+
+  .card {
+    padding: 14px;
+  }
+
+  button {
+    font-size: 14px;
+  }
+}
+.toast {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1e6bff;
+  color: white;
+  padding: 12px 18px;
+  border-radius: 12px;
+  font-size: 14px;
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.3s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+/* ativo */
+.toast.show {
+  opacity: 1;
+}
+
+.opcao-avaliacao{
+  display:flex;
+  align-items:center;
+  background:#fff;
+  border:1px solid #e6eaf0;
+  border-radius:18px;
+  padding:18px;
+  margin-bottom:15px;
+  cursor:pointer;
+  text-align:left;
+  box-shadow:0 2px 8px rgba(0,0,0,.05);
+}
+
+.opcao-icone{
+  width:60px;
+  height:60px;
+  border-radius:50%;
+  background:#eaf2ff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:28px;
+  margin-right:15px;
+}
+
+.opcao-texto{
+  flex:1;
+}
+
+.opcao-texto b{
+  display:block;
+  font-size:18px;
+  color:#222;
+}
+
+.opcao-texto p{
+  margin-top:4px;
+  color:#666;
+  font-size:14px;
+}
+
+.seta{
+  font-size:34px;
+  color:#1565c0;
+  font-weight:300;
+}
+  </style>
+
+<body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<div class="container"><div class="appbar">🏥 Engenharia Clínica</div>
+
+  <!-- 🏥 TELA 1 - CHAMADO -->
+  <div id="tela1" class="tela ativa">
+
+    <div class="card">
+      <h2>Concluir Chamado</h2>
+
+      <input id="chamado" placeholder="Número do chamado">
+      <input id="tecnico" placeholder="Nome do técnico">
+
+      <label>Data</label>
+      <input type="date" id="data">
+
+      <label>Hora</label>
+      <input type="time" id="hora">
+
+      <button onclick="irOpcoes()">Concluir atendimento</button>
+    </div>
+
+  </div>
+
+  <!-- 📌 TELA 2 - OPÇÕES -->
+  <div id="tela2" class="tela">
+
+  <div class="card" style="text-align:center;">
+
+    <div style="
+      width:90px;
+      height:90px;
+      background:#4caf50;
+      border-radius:50%;
+      margin:10px auto 20px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:50px;
+      color:white;">
+      ✓
+    </div>
+
+    <h2 style="margin-bottom:8px;">
+      Chamado concluído com sucesso!
+    </h2>
+
+    <p style="
+      color:#666;
+      margin-bottom:25px;
+      font-size:14px;">
+      Como deseja realizar a avaliação?
+    </p>
+
+    <!-- QR CODE -->
+    <div class="opcao-avaliacao" onclick="gerarQR()">
+
+      <div class="opcao-icone">
+        📱
+      </div>
+
+      <div class="opcao-texto">
+        <b>Gerar QR Code</b>
+        <p>Cliente avalia pelo próprio celular.</p>
+      </div>
+
+      <div class="seta">›</div>
+
+    </div>
+
+    <!-- TABLET -->
+    <div class="opcao-avaliacao" onclick="avaliarTablet()">
+
+      <div class="opcao-icone">
+        ⭐
+      </div>
+
+      <div class="opcao-texto">
+        <b>Avaliar aqui</b>
+        <p>Abrir avaliação neste dispositivo.</p>
+      </div>
+
+      <div class="seta">›</div>
+
+    </div>
+
+    <div id="qr"></div>
+
+    <div style="
+      margin-top:30px;
+      color:#1565c0;
+      font-size:14px;">
+      ℹ O feedback do cliente é muito importante para nós.
+    </div>
+
+  </div>
+
+</div>
+
+  <!-- ⭐ TELA 3 - AVALIAÇÃO -->
+  <div id="tela3" class="tela">
+
+    <div class="card">
+
+      <h2>Avaliação</h2>
+
+  <div class="card-resumo">
+
+  <h3>Resumo do Atendimento</h3>
+
+  <div id="resumoChamado"></div>
+
+</div>
+
+      <div class="estrelas">
+        <span onclick="nota(1)">★</span>
+        <span onclick="nota(2)">★</span>
+        <span onclick="nota(3)">★</span>
+        <span onclick="nota(4)">★</span>
+        <span onclick="nota(5)">★</span>
+      </div>
+
+      <textarea id="comentario" placeholder="Comentário (opcional)"></textarea>
+
+      <button onclick="enviar()">Enviar avaliação</button>
+
+    </div>
+
+  </div>
+
+  <!-- 📡 PENDÊNCIAS -->
+  <div id="tela4" class="tela">
+
+    <div class="card">
+
+      <h2>Pendências</h2>
+
+      <div id="listaPendencias"></div>
+
+      <button onclick="sincronizar()">Sincronizar</button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- MENU -->
+<div class="menu">
+
+  <button onclick="abrir('tela1')" class="ativo">
+    <span>📋</span>
+    Chamados
+  </button>
+
+  <button onclick="abrir('tela4')">
+    <span>☁️</span>
+    Offline
+  </button>
+
+</div>
+
+<script>
+let notaSelecionada = 0;
+let chamadoFinal = {};
+
+const API = "https://script.google.com/macros/s/AKfycbzWnyRNwah1Tshb1pMZcZdlFLz7Tv315LlIR9ahIzBGqqnfTXXg85Zbs1dy4jjdw-6TaA/exec";
+
+window.onload = () => {
+  let agora = new Date();
+  carregarPendencias();
+  document.getElementById("data").value = agora.toISOString().split("T")[0];
+  document.getElementById("hora").value =
+    agora.getHours().toString().padStart(2,'0') + ":" +
+    agora.getMinutes().toString().padStart(2,'0');
+};
+
+/* 🔁 navegação base */
+function abrir(tela){
+  document.querySelectorAll(".tela").forEach(t=>t.classList.remove("ativa"));
+  document.getElementById(tela).classList.add("ativa");
+}
+
+/* ➡️ fluxo correto */
+function irOpcoes(){
+
+  chamadoFinal = {
+    chamado: document.getElementById("chamado").value,
+    tecnico: document.getElementById("tecnico").value,
+    data: document.getElementById("data").value,
+    hora: document.getElementById("hora").value
+  };
+
+  abrir("tela2");
+}
+
+/* ⭐ avaliar no tablet */
+function avaliarTablet(){
+  abrir("tela3");
+
+  const chamado = document.getElementById("chamado").value;
+  const tecnico = document.getElementById("tecnico").value;
+  const data = document.getElementById("data").value;
+  const hora = document.getElementById("hora").value;
+
+  document.getElementById("resumoChamado").innerHTML = `
+    
+    <div class="resumo-item">
+      <span>📄 Chamado:</span>
+      <b>${chamado}</b>
+    </div>
+
+    <div class="resumo-item">
+      <span>👨‍🔧 Técnico:</span>
+      <b>${tecnico}</b>
+    </div>
+
+    <div class="resumo-item">
+      <span>📅 Data:</span>
+      <b>${data}</b>
+    </div>
+
+    <div class="resumo-item">
+      <span>⏰ Hora:</span>
+      <b>${hora}</b>
+    </div>
+
+  `;
+}
+
+/* 📷 QR CODE (simples por enquanto) */
+function gerarQR(){
+
+  const chamado = document.getElementById("chamado").value;
+  const tecnico = document.getElementById("tecnico").value;
+  const data = document.getElementById("data").value;
+  const hora = document.getElementById("hora").value;
+
+  const url =
+    API +
+    "?chamado=" + encodeURIComponent(chamado) +
+    "&tecnico=" + encodeURIComponent(tecnico) +
+    "&data=" + encodeURIComponent(data) +
+    "&hora=" + encodeURIComponent(hora);
+
+  const qrDiv = document.getElementById("qr");
+
+  qrDiv.innerHTML = "";
+
+  new QRCode(qrDiv,{
+    text:url,
+    width:220,
+    height:220
+  });
+
+}
+/* ⭐ estrelas */
+function nota(n){
+  notaSelecionada = n;
+
+  document.querySelectorAll(".estrelas span")
+    .forEach((e,i)=>e.classList.toggle("ativa", i<n));
+}
+
+/* 📡 enviar */
+function enviar(){
+
+  const dados = {
+    chamado: document.getElementById("chamado").value,
+    tecnico: document.getElementById("tecnico").value,
+    data: document.getElementById("data").value,
+    hora: document.getElementById("hora").value,
+    nota: notaSelecionada,
+    comentario: document.getElementById("comentario").value
+  };
+
+  if(!navigator.onLine){
+    salvar(dados);
+    mostrarToast("📴 Salvo offline");
+    return;
+  }
+
+  fetch(API, {
+    method: "POST",
+    body: JSON.stringify(dados)
+  })
+  .then(() => {
+    mostrarToast("✔ Avaliação enviada com sucesso");
+  })
+  .catch(() => {
+    salvar(dados);
+    mostrarToast("⚠ Erro, salvo offline");
+  });
+
+}
+
+/* 💾 offline */
+function salvar(d){
+  let lista = JSON.parse(localStorage.getItem("pend")) || [];
+
+  // evita duplicar chamado igual
+  const existe = lista.some(item => item.chamado === d.chamado);
+
+  if(!existe){
+    lista.push(d);
+    localStorage.setItem("pend", JSON.stringify(lista));
+  }
+
+  carregarPendencias();
+}
+function carregarPendencias(){
+  let lista = JSON.parse(localStorage.getItem("pend")) || [];
+
+  const div = document.getElementById("listaPendencias");
+
+  if(lista.length === 0){
+    div.innerHTML = "<p style='text-align:center;color:#888'>Nenhuma pendência</p>";
+    return;
+  }
+
+  div.innerHTML = lista.map((d,i)=>`
+    <div class="item">
+      📄 ${d.chamado} <br>
+      👨‍🔧 ${d.tecnico} <br>
+      📅 ${d.data} ⏰ ${d.hora}
+    </div>
+  `).join("");
+}
+/* 📡 pendências */
+async function sincronizar(){
+
+  let lista = JSON.parse(localStorage.getItem("pend")) || [];
+
+  if(lista.length === 0){
+    mostrarToast("Nada para sincronizar");
+    return;
+  }
+
+  let novosRestantes = [];
+
+  for(const d of lista){
+
+    try{
+      await fetch(API,{
+        method: "POST",
+        body: JSON.stringify(d)
+      });
+
+      // se enviou com sucesso → NÃO entra nos restantes
+    }catch(e){
+      // se falhou → mantém na lista
+      novosRestantes.push(d);
+    }
+  }
+
+  localStorage.setItem("pend", JSON.stringify(novosRestantes));
+
+  carregarPendencias();
+
+  mostrarToast("✔ Sincronização concluída");
+}
+  function mostrarToast(msg) {
+  const toast = document.getElementById("toast");
+
+  toast.innerText = msg;
+  toast.classList.add("show");
+
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, 2500);
+}
+</script>
+<div id="toast" class="toast"></div>
+</body>
+</html>
