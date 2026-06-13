@@ -1,28 +1,40 @@
-/* RESET BÁSICO */
+/* RESET */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Arial, sans-serif;
 }
 
-/* FUNDO GERAL */
+/* FUNDO APP */
 body {
-  background: #f4f6f9;
+  background: #e9eef5;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  padding: 20px;
 }
 
-/* CONTAINER PRINCIPAL */
+/* CONTAINER DO APP */
 .container {
   width: 100%;
-  max-width: 500px;
+  max-width: 420px;
+  height: 100vh;
   background: #fff;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+/* TELAS */
+.tela {
+  flex: 1;
   padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+  display: none;
+  overflow-y: auto;
+}
+
+.ativa {
+  display: block;
 }
 
 /* TÍTULOS */
@@ -38,96 +50,98 @@ input, textarea {
   padding: 12px;
   margin-bottom: 12px;
   border: 1px solid #ddd;
-  border-radius: 8px;
+  border-radius: 10px;
   font-size: 14px;
   outline: none;
-}
-
-textarea {
-  resize: none;
-  height: 100px;
-}
-
-/* LABELS */
-label {
-  font-size: 13px;
-  color: #555;
-  margin-top: 10px;
-  display: block;
 }
 
 /* BOTÕES */
 button {
   width: 100%;
-  padding: 12px;
+  padding: 14px;
   margin-top: 10px;
-  background: #1e88e5;
+  background: #1976d2;
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   font-size: 15px;
   cursor: pointer;
   transition: 0.2s;
 }
 
 button:hover {
-  background: #1565c0;
+  background: #125aa3;
 }
 
-/* BOTÕES SECUNDÁRIOS */
-button.secondary {
+/* BOTÃO SECUNDÁRIO */
+button.secundario {
   background: #6c757d;
-}
-
-button.secondary:hover {
-  background: #5a6268;
-}
-
-/* TEXTO QR */
-#qr {
-  margin-top: 10px;
-  font-size: 12px;
-  word-break: break-all;
-  color: #333;
-  background: #f1f1f1;
-  padding: 10px;
-  border-radius: 6px;
 }
 
 /* ESTRELAS */
 .estrela {
-  font-size: 35px;
+  font-size: 32px;
   cursor: pointer;
   color: #ccc;
-  transition: 0.2s;
-}
-
-.estrela:hover {
-  transform: scale(1.1);
 }
 
 .estrela.ativa {
   color: gold;
 }
 
+/* QR TEXTO */
+#qr {
+  font-size: 12px;
+  margin-top: 10px;
+  word-break: break-all;
+  background: #f2f2f2;
+  padding: 10px;
+  border-radius: 8px;
+}
+
 /* PENDÊNCIAS */
 .pendencia {
-  background: #f9fafc;
-  border: 1px solid #ddd;
+  background: #f8f9fb;
   padding: 10px;
   margin-bottom: 10px;
-  border-radius: 8px;
+  border-radius: 10px;
+  border-left: 4px solid #ff9800;
   font-size: 13px;
 }
 
-/* TELA DE CONFIRMAÇÃO */
-#tela4 h2 {
-  color: green;
+/* --------------------------- */
+/* MENU INFERIOR (APP STYLE)  */
+/* --------------------------- */
+
+.menu {
+  height: 60px;
+  display: flex;
+  border-top: 1px solid #ddd;
+  background: #fff;
 }
 
-/* RESPONSIVO TABLET */
+.menu button {
+  flex: 1;
+  background: none;
+  color: #555;
+  border: none;
+  font-size: 12px;
+  padding: 8px;
+  margin: 0;
+  border-radius: 0;
+}
+
+.menu button.ativo {
+  color: #1976d2;
+  font-weight: bold;
+}
+
+/* RESPONSIVO */
 @media (min-width: 768px) {
   .container {
-    max-width: 600px;
+    max-width: 420px;
+    border-radius: 20px;
+    margin-top: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
   }
 }
