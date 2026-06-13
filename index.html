@@ -3,16 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <title>App Avaliação de Chamados</title>
- <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./style.css">
 </head>
 
 <body>
 
 <div class="container">
 
-  <!-- 🔵 TELA 1 - REGISTRO -->
+  <!-- 🏠 TELA PRINCIPAL -->
   <div id="tela1" class="tela ativa">
-    <h2>Registro do Chamado</h2>
+
+    <h2>Concluir Chamado</h2>
 
     <input id="chamado" placeholder="Número do chamado">
     <input id="tecnico" placeholder="Nome do técnico">
@@ -23,25 +24,11 @@
     <label>Hora</label>
     <input type="time" id="hora">
 
-    <button onclick="irParaOpcoes()">Concluir Atendimento</button>
-  </div>
+    <button onclick="irParaAvaliacao()">Continuar</button>
 
-  <!-- 🟡 TELA 2 - OPÇÕES -->
-  <div id="tela2" class="tela">
-    <h2>Opções</h2>
+    <hr style="margin:15px 0;">
 
-    <button onclick="irParaAvaliacao()">Abrir Avaliação</button>
-    <button onclick="verPendencias()">Ver Pendências</button>
-    <button onclick="gerarQR()">Gerar QR Code</button>
-
-    <p id="qr"></p>
-  </div>
-
-  <!-- ⭐ TELA 3 - AVALIAÇÃO -->
-  <div id="tela3" class="tela">
-    <h2>Avaliação do Atendimento</h2>
-
-    <p id="infoChamado"></p>
+    <h3>Avaliação rápida</h3>
 
     <div>
       <span class="estrela" onclick="nota(1)">★</span>
@@ -54,77 +41,80 @@
     <textarea id="comentario" placeholder="Comentário (opcional)"></textarea>
 
     <button onclick="enviar()">Enviar Avaliação</button>
+
   </div>
 
-  <!-- 🟢 TELA 4 - CONFIRMAÇÃO -->
-  <div id="tela4" class="tela">
-    <h2>✔ Avaliação enviada!</h2>
-    <p>Obrigado pelo feedback.</p>
-
-    <button onclick="reiniciar()">Novo chamado</button>
-  </div>
-
-  <!-- 🔴 TELA 5 - PENDÊNCIAS -->
+  <!-- 📡 TELA PENDÊNCIAS -->
   <div id="tela5" class="tela">
-    <h2>📡 Pendências de Envio</h2>
+
+    <h2>Pendências de Envio</h2>
 
     <div id="listaPendencias"></div>
 
     <button onclick="sincronizar()">Sincronizar Agora</button>
-    <button onclick="voltar()">Voltar</button>
+
   </div>
 
 </div>
 
-<script src="app.js"></script>
+<!-- 🔻 MENU INFERIOR -->
+<div class="menu">
+
+  <button onclick="abrirTela('tela1')" id="btnHome" class="ativo">
+    🏠 Principal
+  </button>
+
+  <button onclick="abrirTela('tela5')" id="btnPend">
+    📡 Pendências
+  </button>
+
+</div>
 
 <script>
 let notaSelecionada = 0;
 
 const API_URL = "https://script.google.com/macros/s/AKfycby9NyvrwB6FTjGN_n6Y9z8Ig56mdaG0HKgvDdyMNDpmZIZWu93rm-5T-kx30hJq_VYVZA/exec";
 
-// 📅 data/hora automática
+// 📅 automático
 window.onload = function () {
+
   let agora = new Date();
 
-  document.getElementById("data").value = agora.toISOString().split("T")[0];
+  document.getElementById("data").value =
+    agora.toISOString().split("T")[0];
 
   document.getElementById("hora").value =
     agora.getHours().toString().padStart(2,'0') + ":" +
     agora.getMinutes().toString().padStart(2,'0');
-
-  sincronizarAutomatico();
 }
 
-// 📌 controle de telas
-function mostrar(tela) {
-  document.querySelectorAll(".tela").forEach(t => t.classList.remove("ativa"));
+// 📱 navegação
+function abrirTela(tela) {
+
+  document.querySelectorAll(".tela")
+    .forEach(t => t.classList.remove("ativa"));
+
   document.getElementById(tela).classList.add("ativa");
-}
 
-function irParaOpcoes() {
-  mostrar("tela2");
-}
+  document.querySelectorAll(".menu button")
+    .forEach(b => b.classList.remove("ativo"));
 
-function irParaAvaliacao() {
-  mostrar("tela3");
+  if (tela === "tela1") document.getElementById("btnHome").classList.add("ativo");
+  if (tela === "tela5") document.getElementById("btnPend").classList.add("ativo");
 
-  document.getElementById("infoChamado").innerText =
-    "Chamado: " + document.getElementById("chamado").value +
-    " | Técnico: " + document.getElementById("tecnico").value;
+  if (tela === "tela5") mostrarPendencias();
 }
 
 // ⭐ estrelas
 function nota(n) {
   notaSelecionada = n;
 
-  let estrelas = document.querySelectorAll(".estrela");
-  estrelas.forEach((e, i) => {
+  document.querySelectorAll(".estrela").forEach((e, i) => {
     e.classList.toggle("ativa", i < n);
   });
 }
 
-// 📡 ENVIAR
+// 📡 enviar
 function enviar() {
 
   const dados = {
@@ -136,10 +126,9 @@ function enviar() {
     comentario: document.getElementById("comentario").value
   };
 
-  // ❌ SEM INTERNET → salva pendente
   if (!navigator.onLine) {
     salvarPendente(dados);
-    mostrar("tela4");
+    alert("Sem internet. Salvo em pendências.");
     return;
   }
 
@@ -147,27 +136,19 @@ function enviar() {
     method: "POST",
     body: JSON.stringify(dados)
   })
-  .then(r => r.text())
-  .then(res => {
-    console.log(res);
-    mostrar("tela4");
-  })
-  .catch(err => {
-    salvarPendente(dados);
-    mostrar("tela4");
-  });
+  .then(() => alert("Avaliação enviada"))
+  .catch(() => salvarPendente(dados));
 }
 
-// 💾 salvar offline
+// 💾 offline
 function salvarPendente(dados) {
   let lista = JSON.parse(localStorage.getItem("pendencias")) || [];
   lista.push(dados);
   localStorage.setItem("pendencias", JSON.stringify(lista));
 }
 
-// 📡 ver pendências
-function verPendencias() {
-  mostrar("tela5");
+// 📡 mostrar pendências
+function mostrarPendencias() {
 
   let lista = JSON.parse(localStorage.getItem("pendencias")) || [];
 
@@ -185,6 +166,7 @@ function verPendencias() {
 
 // 🔄 sincronizar
 function sincronizar() {
+
   let lista = JSON.parse(localStorage.getItem("pendencias")) || [];
 
   if (lista.length === 0) {
@@ -192,43 +174,21 @@ function sincronizar() {
     return;
   }
 
-  lista.forEach((dados, index) => {
+  lista.forEach((dados, i) => {
     fetch(API_URL, {
       method: "POST",
       body: JSON.stringify(dados)
-    })
-    .then(() => {
-      lista.splice(index, 1);
+    }).then(() => {
+      lista.splice(i, 1);
       localStorage.setItem("pendencias", JSON.stringify(lista));
-      verPendencias();
+      mostrarPendencias();
     });
   });
 }
 
-// 🔄 automático
-function sincronizarAutomatico() {
-  if (navigator.onLine) {
-    sincronizar();
-  }
-}
-
-function voltar() {
-  mostrar("tela2");
-}
-
-// 🔄 reiniciar
-function reiniciar() {
-  location.reload();
-}
-
-// 📷 QR simples (depois melhoramos)
-function gerarQR() {
-  const url =
-    window.location.href +
-    "?chamado=" + document.getElementById("chamado").value +
-    "&tec=" + document.getElementById("tecnico").value;
-
-  document.getElementById("qr").innerText = url;
+// avaliação direta
+function irParaAvaliacao() {
+  alert("Preencha e envie a avaliação abaixo.");
 }
 </script>
 
