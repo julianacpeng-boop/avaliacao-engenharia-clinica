@@ -484,7 +484,8 @@ function carregarPendencias(){
   `).join("");
 }
 /* 📡 pendências */
-function sincronizar(){
+async function sincronizar(){
+
   let lista = JSON.parse(localStorage.getItem("pend")) || [];
 
   if(lista.length === 0){
@@ -492,32 +493,28 @@ function sincronizar(){
     return;
   }
 
-  let enviados = [];
+  let novosRestantes = [];
 
-  lista.forEach(async (d)=>{
+  for(const d of lista){
+
     try{
       await fetch(API,{
-        method:"POST",
+        method: "POST",
         body: JSON.stringify(d)
       });
 
-      enviados.push(d);
-    } catch(e){
-      console.log("Erro envio:", d);
+      // se enviou com sucesso → NÃO entra nos restantes
+    }catch(e){
+      // se falhou → mantém na lista
+      novosRestantes.push(d);
     }
-  });
+  }
 
-  // limpa os enviados
-  setTimeout(()=>{
-    let restantes = lista.filter(item =>
-      !enviados.includes(item)
-    );
+  localStorage.setItem("pend", JSON.stringify(novosRestantes));
 
-    localStorage.setItem("pend", JSON.stringify(restantes));
-    carregarPendencias();
+  carregarPendencias();
 
-    mostrarToast("✔ Sincronização concluída");
-  },1500);
+  mostrarToast("✔ Sincronização concluída");
 }
   function mostrarToast(msg) {
   const toast = document.getElementById("toast");
