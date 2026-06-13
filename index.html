@@ -2,75 +2,164 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>Teste - Avaliação de Chamados</title>
+  <title>App Avaliação de Chamados</title>
   <link rel="stylesheet" href="estilo.css">
+
+  <style>
+    .tela { display: none; }
+    .ativa { display: block; }
+
+    .estrela {
+      font-size: 30px;
+      cursor: pointer;
+      color: #ccc;
+    }
+
+    .estrela.ativa {
+      color: gold;
+    }
+  </style>
 </head>
 
 <body>
 
-  <div class="container">
+<div class="container">
 
-    <h2>Registro de Chamados - TESTE</h2>
+  <!-- 🔵 TELA 1 - REGISTRO -->
+  <div id="tela1" class="tela ativa">
+    <h2>Registro do Chamado</h2>
 
-    <label>Número do Chamado</label>
-    <input type="text" id="chamado" placeholder="Ex: 12345">
+    <input id="chamado" placeholder="Número do chamado">
+    <input id="tecnico" placeholder="Nome do técnico">
 
-    <label>Nome do Técnico</label>
-    <input type="text" id="tecnico" placeholder="Ex: João Silva">
-
-    <label>Data da Conclusão</label>
+    <label>Data</label>
     <input type="date" id="data">
 
-    <label>Hora da Conclusão</label>
+    <label>Hora</label>
     <input type="time" id="hora">
 
-    <button onclick="enviarTeste()">Enviar Teste</button>
-
-    <p id="status"></p>
-
+    <button onclick="irParaOpcoes()">Concluir Atendimento</button>
   </div>
 
-  <script src="app.js"></script>
+  <!-- 🟡 TELA 2 - OPÇÕES -->
+  <div id="tela2" class="tela">
+    <h2>Opções</h2>
 
-  <script>
-    // preencher data e hora automática
-    window.onload = function () {
-      let agora = new Date();
+    <button onclick="irParaAvaliacao()">Abrir Avaliação</button>
+    <button onclick="gerarQR()">Gerar QR Code</button>
 
-      document.getElementById("data").value = agora.toISOString().split("T")[0];
+    <p id="qr"></p>
+  </div>
 
-      document.getElementById("hora").value =
-        agora.getHours().toString().padStart(2, '0') + ":" +
-        agora.getMinutes().toString().padStart(2, '0');
-    }
+  <!-- ⭐ TELA 3 - AVALIAÇÃO -->
+  <div id="tela3" class="tela">
+    <h2>Avaliação do Atendimento</h2>
 
-    function enviarTeste() {
+    <p id="infoChamado"></p>
 
-      const dados = {
-        chamado: document.getElementById("chamado").value,
-        tecnico: document.getElementById("tecnico").value,
-        dataConclusao: document.getElementById("data").value,
-        horaConclusao: document.getElementById("hora").value,
-        nota: 5,
-        comentario: "Teste automático do sistema"
-      };
+    <div>
+      <span class="estrela" onclick="nota(1)">★</span>
+      <span class="estrela" onclick="nota(2)">★</span>
+      <span class="estrela" onclick="nota(3)">★</span>
+      <span class="estrela" onclick="nota(4)">★</span>
+      <span class="estrela" onclick="nota(5)">★</span>
+    </div>
 
-      fetch("https://script.google.com/macros/s/AKfycby9NyvrwB6FTjGN_n6Y9z8Ig56mdaG0HKgvDdyMNDpmZIZWu93rm-5T-kx30hJq_VYVZA/exec", {
-        method: "POST",
-        body: JSON.stringify(dados)
-      })
-      .then(r => r.text())
-      .then(res => {
-        document.getElementById("status").innerText = "✔ Enviado com sucesso: " + res;
-        console.log(res);
-      })
-      .catch(err => {
-        document.getElementById("status").innerText = "❌ Erro ao enviar";
-        console.error(err);
-      });
+    <textarea id="comentario" placeholder="Comentário (opcional)"></textarea>
 
-    }
-  </script>
+    <button onclick="enviar()">Enviar Avaliação</button>
+  </div>
+
+  <!-- 🟢 TELA 4 - CONFIRMAÇÃO -->
+  <div id="tela4" class="tela">
+    <h2>✔ Avaliação enviada!</h2>
+    <p>Obrigado pelo feedback.</p>
+
+    <button onclick="reiniciar()">Novo chamado</button>
+  </div>
+
+</div>
+
+<script src="app.js"></script>
+
+<script>
+let notaSelecionada = 0;
+
+window.onload = function () {
+  let agora = new Date();
+
+  document.getElementById("data").value = agora.toISOString().split("T")[0];
+
+  document.getElementById("hora").value =
+    agora.getHours().toString().padStart(2,'0') + ":" +
+    agora.getMinutes().toString().padStart(2,'0');
+}
+
+function mostrar(tela) {
+  document.querySelectorAll(".tela").forEach(t => t.classList.remove("ativa"));
+  document.getElementById(tela).classList.add("ativa");
+}
+
+function irParaOpcoes() {
+  mostrar("tela2");
+}
+
+function irParaAvaliacao() {
+  mostrar("tela3");
+
+  document.getElementById("infoChamado").innerText =
+    "Chamado: " + document.getElementById("chamado").value +
+    " | Técnico: " + document.getElementById("tecnico").value;
+}
+
+function nota(n) {
+  notaSelecionada = n;
+
+  let estrelas = document.querySelectorAll(".estrela");
+  estrelas.forEach((e, i) => {
+    e.classList.toggle("ativa", i < n);
+  });
+}
+
+function enviar() {
+
+  const dados = {
+    chamado: document.getElementById("chamado").value,
+    tecnico: document.getElementById("tecnico").value,
+    dataConclusao: document.getElementById("data").value,
+    horaConclusao: document.getElementById("hora").value,
+    nota: notaSelecionada,
+    comentario: document.getElementById("comentario").value
+  };
+
+  fetch("https://script.google.com/macros/s/AKfycby9NyvrwB6FTjGN_n6Y9z8Ig56mdaG0HKgvDdyMNDpmZIZWu93rm-5T-kx30hJq_VYVZA/exec", {
+    method: "POST",
+    body: JSON.stringify(dados)
+  })
+  .then(r => r.text())
+  .then(res => {
+    console.log(res);
+    mostrar("tela4");
+  })
+  .catch(err => {
+    alert("Erro ao enviar");
+    console.error(err);
+  });
+}
+
+function reiniciar() {
+  location.reload();
+}
+
+function gerarQR() {
+  const url =
+    window.location.href +
+    "?chamado=" + document.getElementById("chamado").value +
+    "&tec=" + document.getElementById("tecnico").value;
+
+  document.getElementById("qr").innerText = url;
+}
+</script>
 
 </body>
 </html>
