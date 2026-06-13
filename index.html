@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Avaliação Engenharia Clínica</title>
+
   <link rel="stylesheet" href="style.css">
 </head>
 
@@ -10,52 +11,69 @@
 
 <div id="app">
 
-  <!-- TELA 1 -->
+  <!-- MENU -->
+  <div class="menu">
+    <button onclick="mostrar('tela1')">Chamado</button>
+    <button onclick="mostrar('tela5')">Pendências</button>
+  </div>
+
+  <!-- TELA 1 - CHAMADO -->
   <div class="tela ativa" id="tela1">
+
     <h2>Registro do Chamado</h2>
 
     <input id="chamado" placeholder="Número do chamado">
     <input id="tecnico" placeholder="Nome do técnico">
+
     <input id="data" type="date">
     <input id="hora" type="time">
 
-    <button onclick="irTela2()">Avançar</button>
+    <button onclick="concluirChamado()">Concluir</button>
+
   </div>
 
-  <!-- TELA 2 -->
+  <!-- TELA 2 - AÇÕES -->
   <div class="tela" id="tela2">
+
     <h2>Ações</h2>
 
+    <button onclick="mostrar('tela4')">Avaliar no Tablet</button>
     <button onclick="gerarQR()">Gerar QR Code</button>
-    <button onclick="irTela4()">Avaliação Direta</button>
+
   </div>
 
-  <!-- TELA 3 -->
+  <!-- TELA 3 - QR CODE -->
   <div class="tela" id="tela3">
-    <h2>QR Code</h2>
+
+    <h2>QR Code do Chamado</h2>
 
     <div id="qrcode"></div>
 
-    <button onclick="irTela1()">Voltar</button>
+    <button onclick="mostrar('tela1')">Novo Chamado</button>
+
   </div>
 
-  <!-- TELA 4 -->
+  <!-- TELA 4 - AVALIAÇÃO -->
   <div class="tela" id="tela4">
+
     <h2>Avaliação</h2>
 
-    <input id="nota" placeholder="Nota (0-5)">
-    <input id="comentario" placeholder="Comentário">
+    <input id="nota" type="number" min="1" max="5" placeholder="Nota (1 a 5)">
+    <input id="comentario" placeholder="Comentário (opcional)">
 
-    <button onclick="enviar()">Enviar Avaliação</button>
+    <button onclick="enviarAvaliacao()">Enviar Avaliação</button>
+
   </div>
 
-  <!-- TELA 5 -->
+  <!-- TELA 5 - PENDÊNCIAS -->
   <div class="tela" id="tela5">
-    <h2>Pendências</h2>
+
+    <h2>Pendências Offline</h2>
 
     <div id="pendencias"></div>
 
-    <button onclick="sincronizar()">Enviar Pendências</button>
+    <button onclick="sincronizar()">Enviar Tudo</button>
+
   </div>
 
 </div>
