@@ -104,6 +104,7 @@
 
 <script>
 let notaSelecionada = 0;
+let chamadoFinal = {};
 
 const API = "https://script.google.com/macros/s/AKfycby9NyvrwB6FTjGN_n6Y9z8Ig56mdaG0HKgvDdyMNDpmZIZWu93rm-5T-kx30hJq_VYVZA/exec";
 
@@ -123,6 +124,14 @@ function abrir(tela){
 
 /* ➡️ fluxo correto */
 function irOpcoes(){
+
+  chamadoFinal = {
+    chamado: document.getElementById("chamado").value,
+    tecnico: document.getElementById("tecnico").value,
+    data: document.getElementById("data").value,
+    hora: document.getElementById("hora").value
+  };
+
   abrir("tela2");
 }
 
