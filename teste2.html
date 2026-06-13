@@ -318,76 +318,6 @@ button {
   </style>
 
 <body>
-  <script>
-/*!
- * QRCode.js - versão offline completa
- * https://github.com/davidshimjs/qrcodejs
- */
-
-(function() {
-  function QRCode(el, options) {
-    this._el = el;
-    this._htOption = options;
-
-    this.makeCode = function(text) {
-      this._el.innerHTML = "";
-
-      const size = options.width;
-
-      const canvas = document.createElement("canvas");
-      canvas.width = size;
-      canvas.height = size;
-
-      const ctx = canvas.getContext("2d");
-
-      // fundo branco
-      ctx.fillStyle = "#fff";
-      ctx.fillRect(0, 0, size, size);
-
-      // geração real do QR via algoritmo simples embutido (sem internet)
-      const qr = generateFakeMatrix(text);
-
-      const tile = size / qr.length;
-
-      for (let y = 0; y < qr.length; y++) {
-        for (let x = 0; x < qr.length; x++) {
-          ctx.fillStyle = qr[y][x] ? "#000" : "#fff";
-          ctx.fillRect(x * tile, y * tile, tile, tile);
-        }
-      }
-
-      this._el.appendChild(canvas);
-    };
-  }
-
-  // 🔥 Gerador LOCAL simples (offline real)
-  function generateFakeMatrix(text) {
-    const size = 29; // versão fixa simples
-    const grid = [];
-
-    let seed = 0;
-    for (let i = 0; i < text.length; i++) {
-      seed += text.charCodeAt(i);
-    }
-
-    function rand() {
-      seed = (seed * 9301 + 49297) % 233280;
-      return seed / 233280;
-    }
-
-    for (let y = 0; y < size; y++) {
-      grid[y] = [];
-      for (let x = 0; x < size; x++) {
-        grid[y][x] = rand() > 0.5;
-      }
-    }
-
-    return grid;
-  }
-
-  window.QRCode = QRCode;
-})();
-</script>
 
 <div class="container"><div class="appbar">🏥 Engenharia Clínica</div>
 
@@ -553,8 +483,6 @@ button {
 let notaSelecionada = 0;
 let chamadoFinal = {};
 
-  
-
 const API = "https://script.google.com/macros/s/AKfycbzWnyRNwah1Tshb1pMZcZdlFLz7Tv315LlIR9ahIzBGqqnfTXXg85Zbs1dy4jjdw-6TaA/exec";
 
 window.onload = () => {
@@ -636,14 +564,13 @@ function gerarQR(){
     "&data=" + encodeURIComponent(data) +
     "&hora=" + encodeURIComponent(hora);
 
-  document.getElementById("qr").innerHTML = "";
+  const qrImg =
+    "https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=" +
+    encodeURIComponent(url);
 
-  const qr = new QRCode(document.getElementById("qr"), {
-    width: 220,
-    height: 220
-  });
+  document.getElementById("qr").innerHTML =
+    `<img src="${qrImg}" style="width:220px;height:220px;margin-top:10px;">`;
 
-  qr.makeCode(url);
 }
 
 /* ⭐ estrelas */
