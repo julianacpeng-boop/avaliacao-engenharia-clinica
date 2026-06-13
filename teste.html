@@ -1,59 +1,45 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Teste Apps Script</title>
+  <meta charset="UTF-8">
+  <title>Teste Envio</title>
 </head>
-
 <body>
 
-<h2>Teste de Comunicação com Apps Script</h2>
+<h2>Teste Envio Planilha</h2>
 
-<button onclick="enviar()">Testar Envio</button>
+<input id="chamado" placeholder="Chamado"><br><br>
+<input id="tecnico" placeholder="Técnico"><br><br>
+<input id="nota" placeholder="Nota"><br><br>
+<input id="comentario" placeholder="Comentário"><br><br>
 
-<hr>
-
-<div id="resultado">
-Aguardando teste...
-</div>
+<button onclick="enviar()">Enviar</button>
 
 <script>
 
-async function enviar(){
+const URL = "https://script.google.com/macros/s/AKfycbyNR_4H8cYKJJ0KDd8nwq1GYIp0oKEFyj3EnOfgNiCWgz141zNyN4hUJHPR3iqTp16C/exec";
 
-  document.getElementById("resultado").innerHTML =
-  "Enviando...";
+async function enviar() {
+
+  const dados = {
+    chamado: document.getElementById("chamado").value,
+    tecnico: document.getElementById("tecnico").value,
+    nota: document.getElementById("nota").value,
+    comentario: document.getElementById("comentario").value
+  };
 
   try {
 
-    const resposta = await fetch(
-      "https://script.google.com/macros/s/AKfycbyNR_4H8cYKJJ0KDd8nwq1GYIp0oKEFyj3EnOfgNiCWgz141zNyN4hUJHPR3iqTp16C/exec",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          acao: "salvarAvaliacao",
-          chamado: "TESTE123",
-          tecnico: "JULIANA",
-          nota: "5",
-          comentario: "Teste GitHub"
-        })
-      }
-    );
+    const res = await fetch(URL, {
+      method: "POST",
+      body: JSON.stringify(dados)
+    });
 
-    const texto = await resposta.text();
+    const texto = await res.text();
+    alert(texto);
 
-    document.getElementById("resultado").innerHTML =
-      "<b>SUCESSO:</b><br><pre>" + texto + "</pre>";
-
-  } catch (erro) {
-
-    document.getElementById("resultado").innerHTML =
-      "<b>ERRO:</b><br>" + erro;
-
+  } catch (e) {
+    alert("ERRO: " + e);
   }
 
 }
