@@ -1,237 +1,66 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
-
+<html lang="pt-br">
 <head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Avaliação Engenharia Clínica</title>
-
-<link rel="stylesheet" href="style.css">
-
-<link rel="manifest" href="manifest.json">
-
-<meta name="theme-color" content="#0d6efd">
-
+  <meta charset="UTF-8">
+  <title>Avaliação Engenharia Clínica</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<div class="app">
+<div id="app">
 
-    <div class="topo">
+  <!-- TELA 1 -->
+  <div class="tela ativa" id="tela1">
+    <h2>Registro do Chamado</h2>
 
-        <div class="logo">🏥</div>
+    <input id="chamado" placeholder="Número do chamado">
+    <input id="tecnico" placeholder="Nome do técnico">
+    <input id="data" type="date">
+    <input id="hora" type="time">
 
-        <div>
-            <h1>Engenharia Clínica</h1>
-            <span>Sistema de Avaliação</span>
-        </div>
+    <button onclick="irTela2()">Avançar</button>
+  </div>
 
-    </div>
+  <!-- TELA 2 -->
+  <div class="tela" id="tela2">
+    <h2>Ações</h2>
 
-    <!-- TELA 1 -->
+    <button onclick="gerarQR()">Gerar QR Code</button>
+    <button onclick="irTela4()">Avaliação Direta</button>
+  </div>
 
-    <div id="tela1" class="card">
+  <!-- TELA 3 -->
+  <div class="tela" id="tela3">
+    <h2>QR Code</h2>
 
-        <h2>📋 Encerramento do Atendimento</h2>
+    <div id="qrcode"></div>
 
-        <label>Número do Chamado</label>
+    <button onclick="irTela1()">Voltar</button>
+  </div>
 
-        <input
-            type="text"
-            id="chamado"
-            placeholder="Ex: 12345">
+  <!-- TELA 4 -->
+  <div class="tela" id="tela4">
+    <h2>Avaliação</h2>
 
-        <label>Técnico Responsável</label>
+    <input id="nota" placeholder="Nota (0-5)">
+    <input id="comentario" placeholder="Comentário">
 
-        <input
-            type="text"
-            id="tecnico"
-            placeholder="Nome do técnico">
+    <button onclick="enviar()">Enviar Avaliação</button>
+  </div>
 
-        <button
-            class="btn-primary"
-            onclick="concluirAtendimento()">
+  <!-- TELA 5 -->
+  <div class="tela" id="tela5">
+    <h2>Pendências</h2>
 
-            Concluir Atendimento
+    <div id="pendencias"></div>
 
-        </button>
-
-    </div>
-
-    <!-- TELA 2 -->
-
-    <div id="tela2" class="card hidden">
-
-        <h2>✅ Atendimento Concluído</h2>
-
-        <div class="info-box">
-
-            <p>
-                <strong>Chamado:</strong>
-                <span id="infoChamado"></span>
-            </p>
-
-            <p>
-                <strong>Técnico:</strong>
-                <span id="infoTecnico"></span>
-            </p>
-
-            <p>
-                <strong>Data:</strong>
-                <span id="infoData"></span>
-            </p>
-
-            <p>
-                <strong>Hora:</strong>
-                <span id="infoHora"></span>
-            </p>
-
-        </div>
-
-        <button
-            class="btn-primary"
-            onclick="gerarQRCode()">
-
-            📱 Gerar QR Code
-
-        </button>
-
-        <button
-            class="btn-success"
-            onclick="abrirTelaAvaliacao()">
-
-            ⭐ Avaliar Neste Dispositivo
-
-        </button>
-
-        <button
-            class="btn-secondary"
-            onclick="abrirPendentes()">
-
-            📤 Avaliações Pendentes
-
-        </button>
-
-    </div>
-
-    <!-- TELA 3 -->
-
-    <div id="tela3" class="card hidden">
-
-        <h2>📱 QR Code</h2>
-
-        <div class="qr-area">
-
-            <img id="qrCodeImg">
-
-        </div>
-
-        <p class="texto-centro">
-
-            Escaneie para avaliar
-
-        </p>
-
-        <button
-            class="btn-secondary"
-            onclick="mostrarTela('tela2')">
-
-            Voltar
-
-        </button>
-
-    </div>
-
-    <!-- TELA 4 -->
-
-    <div id="tela4" class="card hidden">
-
-        <h2>⭐ Avaliação</h2>
-
-        <div class="info-box">
-
-            <p>
-                <strong>Chamado:</strong>
-                <span id="avChamado"></span>
-            </p>
-
-            <p>
-                <strong>Técnico:</strong>
-                <span id="avTecnico"></span>
-            </p>
-
-        </div>
-
-        <div class="estrelas">
-
-            <span class="estrela" onclick="selecionarNota(1)">★</span>
-            <span class="estrela" onclick="selecionarNota(2)">★</span>
-            <span class="estrela" onclick="selecionarNota(3)">★</span>
-            <span class="estrela" onclick="selecionarNota(4)">★</span>
-            <span class="estrela" onclick="selecionarNota(5)">★</span>
-
-        </div>
-
-        <input
-            type="hidden"
-            id="notaSelecionada"
-            value="0">
-
-        <label>Comentário</label>
-
-        <textarea
-            id="comentario"
-            rows="4"
-            placeholder="Digite sua avaliação">
-        </textarea>
-
-        <button
-            class="btn-success"
-            onclick="enviarAvaliacao()">
-
-            Enviar Avaliação
-
-        </button>
-
-    </div>
-
-    <!-- TELA 5 -->
-
-    <div id="tela5" class="card hidden">
-
-        <h2>📤 Avaliações Pendentes</h2>
-
-        <div id="listaPendentes">
-
-        </div>
-
-        <button
-            class="btn-success"
-            onclick="enviarTodasPendentes()">
-
-            Enviar Todas
-
-        </button>
-
-        <button
-            class="btn-secondary"
-            onclick="mostrarTela('tela2')">
-
-            Voltar
-
-        </button>
-
-    </div>
+    <button onclick="sincronizar()">Enviar Pendências</button>
+  </div>
 
 </div>
-
-<div id="toast"></div>
 
 <script src="app.js"></script>
 
 </body>
-
 </html>
