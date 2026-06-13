@@ -1,29 +1,63 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teste Apps Script</title>
+</head>
+
 <body>
 
-<button onclick="enviar()">Testar</button>
+<h2>Teste de Comunicação com Apps Script</h2>
+
+<button onclick="enviar()">Testar Envio</button>
+
+<hr>
+
+<div id="resultado">
+Aguardando teste...
+</div>
 
 <script>
+
 async function enviar(){
 
-  const url =
-  "https://script.google.com/macros/s/AKfycbyNR_4H8cYKJJ0KDd8nwq1GYIp0oKEFyj3EnOfgNiCWgz141zNyN4hUJHPR3iqTp16C/exec";
+  document.getElementById("resultado").innerHTML =
+  "Enviando...";
 
-  const resposta = await fetch(url,{
-    method:"POST",
-    body:JSON.stringify({
-      acao:"salvarAvaliacao",
-      chamado:"TESTE",
-      tecnico:"JULIANA",
-      nota:"5",
-      comentario:"teste"
-    })
-  });
+  try {
 
-  console.log(await resposta.text());
+    const resposta = await fetch(
+      "https://script.google.com/macros/s/AKfycbyNR_4H8cYKJJ0KDd8nwq1GYIp0oKEFyj3EnOfgNiCWgz141zNyN4hUJHPR3iqTp16C/exec",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          acao: "salvarAvaliacao",
+          chamado: "TESTE123",
+          tecnico: "JULIANA",
+          nota: "5",
+          comentario: "Teste GitHub"
+        })
+      }
+    );
+
+    const texto = await resposta.text();
+
+    document.getElementById("resultado").innerHTML =
+      "<b>SUCESSO:</b><br><pre>" + texto + "</pre>";
+
+  } catch (erro) {
+
+    document.getElementById("resultado").innerHTML =
+      "<b>ERRO:</b><br>" + erro;
+
+  }
 
 }
+
 </script>
 
 </body>
