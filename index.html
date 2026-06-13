@@ -217,14 +217,22 @@ function enviar(){
 
   if(!navigator.onLine){
     salvar(dados);
-    alert("Salvo offline");
+    mostrarToast("📴 Salvo offline");
     return;
   }
 
-  fetch(API,{
-    method:"POST",
-    body:JSON.stringify(dados)
-  }).then(()=>mostrarToast("✔ Avaliação enviada com sucesso");
+  fetch(API, {
+    method: "POST",
+    body: JSON.stringify(dados)
+  })
+  .then(() => {
+    mostrarToast("✔ Avaliação enviada com sucesso");
+  })
+  .catch(() => {
+    salvar(dados);
+    mostrarToast("⚠ Erro, salvo offline");
+  });
+
 }
 
 /* 💾 offline */
