@@ -18,6 +18,13 @@
     .estrela.ativa {
       color: gold;
     }
+
+    .pendencia {
+      background: #f2f2f2;
+      padding: 10px;
+      margin: 5px 0;
+      border-radius: 6px;
+    }
   </style>
 </head>
 
@@ -46,6 +53,7 @@
     <h2>Opções</h2>
 
     <button onclick="irParaAvaliacao()">Abrir Avaliação</button>
+    <button onclick="verPendencias()">Ver Pendências</button>
     <button onclick="gerarQR()">Gerar QR Code</button>
 
     <p id="qr"></p>
@@ -78,6 +86,16 @@
     <button onclick="reiniciar()">Novo chamado</button>
   </div>
 
+  <!-- 🔴 TELA 5 - PENDÊNCIAS -->
+  <div id="tela5" class="tela">
+    <h2>📡 Pendências de Envio</h2>
+
+    <div id="listaPendencias"></div>
+
+    <button onclick="sincronizar()">Sincronizar Agora</button>
+    <button onclick="voltar()">Voltar</button>
+  </div>
+
 </div>
 
 <script src="app.js"></script>
@@ -85,6 +103,9 @@
 <script>
 let notaSelecionada = 0;
 
+const API_URL = "https://script.google.com/macros/s/AKfycby9NyvrwB6FTjGN_n6Y9z8Ig56mdaG0HKgvDdyMNDpmZIZWu93rm-5T-kx30hJq_VYVZA/exec";
+
+// 📅 data/hora automática
 window.onload = function () {
   let agora = new Date();
 
@@ -93,8 +114,11 @@ window.onload = function () {
   document.getElementById("hora").value =
     agora.getHours().toString().padStart(2,'0') + ":" +
     agora.getMinutes().toString().padStart(2,'0');
+
+  sincronizarAutomatico();
 }
 
+// 📌 controle de telas
 function mostrar(tela) {
   document.querySelectorAll(".tela").forEach(t => t.classList.remove("ativa"));
   document.getElementById(tela).classList.add("ativa");
@@ -112,6 +136,7 @@ function irParaAvaliacao() {
     " | Técnico: " + document.getElementById("tecnico").value;
 }
 
+// ⭐ estrelas
 function nota(n) {
   notaSelecionada = n;
 
@@ -121,6 +146,7 @@ function nota(n) {
   });
 }
 
+// 📡 ENVIAR
 function enviar() {
 
   const dados = {
@@ -132,7 +158,14 @@ function enviar() {
     comentario: document.getElementById("comentario").value
   };
 
-  fetch("https://script.google.com/macros/s/AKfycby9NyvrwB6FTjGN_n6Y9z8Ig56mdaG0HKgvDdyMNDpmZIZWu93rm-5T-kx30hJq_VYVZA/exec", {
+  // ❌ SEM INTERNET → salva pendente
+  if (!navigator.onLine) {
+    salvarPendente(dados);
+    mostrar("tela4");
+    return;
+  }
+
+  fetch(API_URL, {
     method: "POST",
     body: JSON.stringify(dados)
   })
@@ -142,15 +175,75 @@ function enviar() {
     mostrar("tela4");
   })
   .catch(err => {
-    alert("Erro ao enviar");
-    console.error(err);
+    salvarPendente(dados);
+    mostrar("tela4");
   });
 }
 
+// 💾 salvar offline
+function salvarPendente(dados) {
+  let lista = JSON.parse(localStorage.getItem("pendencias")) || [];
+  lista.push(dados);
+  localStorage.setItem("pendencias", JSON.stringify(lista));
+}
+
+// 📡 ver pendências
+function verPendencias() {
+  mostrar("tela5");
+
+  let lista = JSON.parse(localStorage.getItem("pendencias")) || [];
+
+  document.getElementById("listaPendencias").innerHTML =
+    lista.length === 0
+      ? "<p>Nenhuma pendência</p>"
+      : lista.map(p => `
+          <div class="pendencia">
+            <b>Chamado:</b> ${p.chamado}<br>
+            <b>Técnico:</b> ${p.tecnico}<br>
+            <b>Nota:</b> ${p.nota}
+          </div>
+        `).join("");
+}
+
+// 🔄 sincronizar
+function sincronizar() {
+  let lista = JSON.parse(localStorage.getItem("pendencias")) || [];
+
+  if (lista.length === 0) {
+    alert("Nada para sincronizar");
+    return;
+  }
+
+  lista.forEach((dados, index) => {
+    fetch(API_URL, {
+      method: "POST",
+      body: JSON.stringify(dados)
+    })
+    .then(() => {
+      lista.splice(index, 1);
+      localStorage.setItem("pendencias", JSON.stringify(lista));
+      verPendencias();
+    });
+  });
+}
+
+// 🔄 automático
+function sincronizarAutomatico() {
+  if (navigator.onLine) {
+    sincronizar();
+  }
+}
+
+function voltar() {
+  mostrar("tela2");
+}
+
+// 🔄 reiniciar
 function reiniciar() {
   location.reload();
 }
 
+// 📷 QR simples (depois melhoramos)
 function gerarQR() {
   const url =
     window.location.href +
