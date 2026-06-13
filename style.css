@@ -5,38 +5,34 @@
   box-sizing: border-box;
   font-family: Arial, sans-serif;
 }
+
+/* FUNDO */
 body {
-  background: red !important;
+  background: #eef2f7;
 }
 
-/* CONTAINER DO APP */
+/* APP CONTAINER */
 .container {
   width: 100%;
   max-width: 420px;
-  height: 100vh;
-  background: #fff;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  overflow: hidden;
+  margin: auto;
+  padding: 15px;
+  padding-bottom: 80px;
 }
 
 /* TELAS */
 .tela {
-  flex: 1;
-  padding: 20px;
   display: none;
-  overflow-y: auto;
 }
 
 .ativa {
   display: block;
 }
 
-/* TÍTULOS */
+/* TÍTULO */
 h2 {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
   color: #1f2d3d;
 }
 
@@ -44,10 +40,9 @@ h2 {
 input, textarea {
   width: 100%;
   padding: 12px;
-  margin-bottom: 12px;
-  border: 1px solid #ddd;
+  margin-bottom: 10px;
   border-radius: 10px;
-  font-size: 14px;
+  border: 1px solid #ddd;
   outline: none;
 }
 
@@ -55,89 +50,56 @@ input, textarea {
 button {
   width: 100%;
   padding: 14px;
-  margin-top: 10px;
   background: #1976d2;
   color: white;
   border: none;
   border-radius: 12px;
-  font-size: 15px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-button:hover {
-  background: #125aa3;
-}
-
-/* BOTÃO SECUNDÁRIO */
-button.secundario {
-  background: #6c757d;
+  margin-top: 10px;
 }
 
 /* ESTRELAS */
 .estrela {
-  font-size: 32px;
-  cursor: pointer;
+  font-size: 30px;
   color: #ccc;
+  cursor: pointer;
 }
 
 .estrela.ativa {
   color: gold;
 }
 
-/* QR TEXTO */
-#qr {
-  font-size: 12px;
-  margin-top: 10px;
-  word-break: break-all;
-  background: #f2f2f2;
-  padding: 10px;
-  border-radius: 8px;
-}
-
 /* PENDÊNCIAS */
 .pendencia {
-  background: #f8f9fb;
+  background: white;
   padding: 10px;
-  margin-bottom: 10px;
   border-radius: 10px;
+  margin-bottom: 10px;
   border-left: 4px solid #ff9800;
-  font-size: 13px;
 }
 
-/* --------------------------- */
-/* MENU INFERIOR (APP STYLE)  */
-/* --------------------------- */
-
+/* MENU INFERIOR */
 .menu {
-  height: 60px;
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 420px;
   display: flex;
+  background: white;
   border-top: 1px solid #ddd;
-  background: #fff;
 }
 
 .menu button {
   flex: 1;
-  background: none;
-  color: #555;
+  padding: 12px;
   border: none;
-  font-size: 12px;
-  padding: 8px;
-  margin: 0;
-  border-radius: 0;
+  background: none;
+  font-size: 13px;
+  color: #777;
 }
 
 .menu button.ativo {
   color: #1976d2;
   font-weight: bold;
-}
-
-/* RESPONSIVO */
-@media (min-width: 768px) {
-  .container {
-    max-width: 420px;
-    border-radius: 20px;
-    margin-top: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-  }
 }
