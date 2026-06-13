@@ -2,13 +2,15 @@ body {
   margin: 0;
   font-family: Arial, sans-serif;
   background: #f4f6f9;
+  color: #1f2d3d;
 }
 
 /* APP CONTAINER */
 #app {
-  max-width: 500px;
+  max-width: 520px;
   margin: auto;
   padding: 15px;
+  padding-bottom: 70px; /* espaço para menu inferior */
 }
 
 /* TELAS */
@@ -23,15 +25,15 @@ body {
 
 /* ANIMAÇÃO */
 @keyframes fade {
-  from { opacity: 0; transform: translateY(5px); }
+  from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 /* TÍTULO */
 h2 {
   text-align: center;
-  color: #1f2d3d;
   margin-bottom: 20px;
+  color: #1f2d3d;
 }
 
 /* INPUTS */
@@ -40,16 +42,17 @@ input {
   padding: 12px;
   margin: 8px 0;
   border: 1px solid #dcdfe6;
-  border-radius: 8px;
-  font-size: 14px;
+  border-radius: 10px;
+  font-size: 15px;
   outline: none;
+  background: #fff;
 }
 
 input:focus {
   border-color: #007bff;
 }
 
-/* BOTÕES */
+/* BOTÕES PRINCIPAIS */
 button {
   width: 100%;
   padding: 12px;
@@ -61,13 +64,14 @@ button {
   font-size: 15px;
   font-weight: bold;
   cursor: pointer;
+  transition: 0.2s;
 }
 
 button:active {
   transform: scale(0.98);
 }
 
-/* BOTÃO SECUNDÁRIO */
+/* BOTÃO SECUNDÁRIO (ex: ações) */
 button.secundario {
   background: #28a745;
 }
@@ -80,19 +84,47 @@ button.secundario {
 }
 
 #qrcode img {
-  width: 200px;
-  height: 200px;
-  border-radius: 10px;
+  width: 220px;
+  height: 220px;
+  border-radius: 12px;
   background: white;
   padding: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
-/* CARD DE PENDÊNCIAS */
+/* PENDÊNCIAS */
 .card {
   background: white;
-  padding: 10px;
-  margin: 8px 0;
-  border-radius: 8px;
-  border-left: 4px solid #ff9800;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 10px;
+  border-left: 5px solid #ff9800;
+  box-shadow: 0 1px 5px rgba(0,0,0,0.05);
   font-size: 14px;
+}
+
+/* MENU INFERIOR (APP STYLE) */
+.menu {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  background: white;
+  border-top: 1px solid #ddd;
+  height: 55px;
+}
+
+.menu button {
+  flex: 1;
+  background: none;
+  color: #007bff;
+  border-radius: 0;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* MELHOR TOQUE NO MOBILE/TABLET */
+button, input {
+  -webkit-tap-highlight-color: transparent;
 }
