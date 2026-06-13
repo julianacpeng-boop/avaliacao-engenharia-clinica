@@ -6,138 +6,176 @@
   
 </head>
   <style>
-   /* ===== RESET ===== */
+    /* RESET MODERNO */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Inter", system-ui, Arial;
+  font-family: system-ui, -apple-system, Arial;
 }
 
-/* ===== FUNDO PROFISSIONAL ===== */
+/* FUNDO */
 body {
-  background: #eef2f7;
-  color: #0f172a;
+  background: #e9eff5;
+  display: flex;
+  justify-content: center;
 }
 
-/* ===== CONTAINER LIMPO ===== */
+/* APP CONTAINER (RESPONSIVO DE VERDADE) */
 .container {
   width: 100%;
+  max-width: 480px;
   min-height: 100vh;
-  padding: 18px;
+  background: #f5f7fb;
+  padding: 16px;
   padding-bottom: 90px;
 }
 
-/* ===== TÍTULOS MAIS FORTES ===== */
-h2 {
-  font-size: 20px;
-  font-weight: 700;
-  text-align: center;
-  margin-bottom: 14px;
-  color: #0f172a;
+/* TELAS */
+.tela {
+  display: none;
 }
 
-/* ===== CARD PREMIUM ===== */
+.ativa {
+  display: block;
+}
+
+/* CARD PROFISSIONAL */
 .card {
   background: #ffffff;
   border-radius: 16px;
   padding: 18px;
   margin-bottom: 14px;
-
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
 }
 
-/* ===== INPUTS ESTILO SISTEMA ===== */
+/* TÍTULO */
+h2 {
+  font-size: 18px;
+  text-align: center;
+  margin-bottom: 12px;
+  color: #1d2b3a;
+}
+
+/* INPUTS MODERNOS */
 input, textarea {
   width: 100%;
   padding: 14px;
   margin-top: 10px;
-
   border-radius: 12px;
-  border: 1px solid #dbe2ea;
-
-  font-size: 15px;
+  border: 1px solid #e0e6ed;
   outline: none;
+  font-size: 15px;
   background: #fff;
-}
-
-input:focus, textarea:focus {
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
 }
 
 textarea {
   min-height: 90px;
+  resize: none;
 }
 
-/* ===== BOTÃO PROFISSIONAL ===== */
+/* BOTÃO */
 button {
   width: 100%;
   padding: 14px;
   margin-top: 12px;
-
   border: none;
   border-radius: 12px;
-
-  background: #2563eb;
+  background: #1e6bff;
   color: white;
-
   font-size: 15px;
   font-weight: 600;
-
-  cursor: pointer;
-  transition: 0.2s;
 }
 
-button:hover {
-  background: #1d4ed8;
-}
-
-button:active {
-  transform: scale(0.98);
-}
-
-/* ===== ESTRELAS MAIS PROFISSIONAIS ===== */
+/* ESTRELAS */
 .estrelas {
   display: flex;
   justify-content: center;
-  gap: 8px;
-  font-size: 32px;
-  margin: 14px 0;
+  gap: 6px;
+  font-size: 34px;
+  margin: 12px 0;
 }
 
 .estrelas span {
-  color: #cbd5e1;
-  cursor: pointer;
+  color: #d0d5dd;
   transition: 0.2s;
 }
 
 .estrelas span.ativa {
-  color: #fbbf24;
+  color: #ffb400;
+  transform: scale(1.05);
 }
 
-/* ===== RESUMO ===== */
+/* INFO CHAMADO */
+#infoChamado {
+  text-align: center;
+  font-size: 14px;
+  color: #444;
+  margin-bottom: 10px;
+}
+
+/* PENDÊNCIAS */
+.item {
+  background: #fff;
+  padding: 12px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  border-left: 4px solid #ff9f1c;
+  font-size: 13px;
+}
+
+/* MENU INFERIOR FIXO (RESPONSIVO REAL) */
+.menu {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  height: 64px;
+  background: #ffffff;
+  display: flex;
+  border-top: 1px solid #e6e9ef;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+}
+
+/* BOTÕES MENU */
+.menu button {
+  flex: 1;
+  border: none;
+  background: none;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* ATIVO */
+.menu button.ativo {
+  color: #1e6bff;
+  font-weight: 700;
+}
+/* CARD RESUMO HOSPITALAR */
 .card-resumo {
-  background: #f8fafc;
+  background: #ffffff;
   border-radius: 14px;
-  padding: 14px;
-  border: 1px solid #e5e7eb;
-  margin-bottom: 16px;
+  padding: 16px;
+  margin: 10px 0 20px 0;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  border-left: 5px solid #1976d2;
 }
 
 .card-resumo h3 {
-  font-size: 15px;
-  margin-bottom: 10px;
-  color: #1e293b;
+  font-size: 16px;
+  margin-bottom: 12px;
+  color: #1d2b3a;
 }
 
+/* LINHAS DO RESUMO */
 .resumo-item {
   display: flex;
   justify-content: space-between;
   padding: 8px 0;
   font-size: 14px;
-  border-bottom: 1px solid #eaeef3;
+  border-bottom: 1px solid #f0f0f0;
 }
 
 .resumo-item:last-child {
@@ -145,68 +183,39 @@ button:active {
 }
 
 .resumo-item span {
-  color: #64748b;
+  color: #6b7280;
 }
+/* RESPONSIVIDADE EXTRA */
+@media (max-width: 380px) {
+  h2 {
+    font-size: 16px;
+  }
 
-/* ===== PENDÊNCIAS (IMPORTANTE) ===== */
-.item {
-  background: #ffffff;
-  padding: 14px;
-  border-radius: 12px;
-  margin-bottom: 10px;
+  .card {
+    padding: 14px;
+  }
 
-  border-left: 4px solid #f59e0b;
-  box-shadow: 0 6px 14px rgba(0,0,0,0.04);
-  font-size: 13px;
+  button {
+    font-size: 14px;
+  }
 }
-
-/* ===== MENU PROFISSIONAL ===== */
-.menu {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 64px;
-
-  background: #ffffff;
-  display: flex;
-
-  border-top: 1px solid #e5e7eb;
-  box-shadow: 0 -6px 20px rgba(0,0,0,0.06);
-}
-
-.menu button {
-  flex: 1;
-  border: none;
-  background: none;
-
-  font-size: 13px;
-  color: #64748b;
-}
-
-.menu button.ativo {
-  color: #2563eb;
-  font-weight: 700;
-}
-
-/* ===== TOAST ===== */
 .toast {
   position: fixed;
   bottom: 80px;
   left: 50%;
   transform: translateX(-50%);
-
-  background: #0f172a;
+  background: #1e6bff;
   color: white;
-
-  padding: 12px 16px;
-  border-radius: 10px;
-
-  font-size: 13px;
+  padding: 12px 18px;
+  border-radius: 12px;
+  font-size: 14px;
   opacity: 0;
+  pointer-events: none;
   transition: 0.3s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
+/* ativo */
 .toast.show {
   opacity: 1;
 }
