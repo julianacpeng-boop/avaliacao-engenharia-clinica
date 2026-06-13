@@ -145,7 +145,38 @@ button {
   color: #1e6bff;
   font-weight: 700;
 }
+/* CARD RESUMO HOSPITALAR */
+.card-resumo {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 16px;
+  margin: 10px 0 20px 0;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  border-left: 5px solid #1976d2;
+}
 
+.card-resumo h3 {
+  font-size: 16px;
+  margin-bottom: 12px;
+  color: #1d2b3a;
+}
+
+/* LINHAS DO RESUMO */
+.resumo-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  font-size: 14px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.resumo-item:last-child {
+  border-bottom: none;
+}
+
+.resumo-item span {
+  color: #6b7280;
+}
 /* RESPONSIVIDADE EXTRA */
 @media (max-width: 380px) {
   h2 {
