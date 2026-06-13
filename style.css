@@ -5,12 +5,8 @@
   box-sizing: border-box;
   font-family: Arial, sans-serif;
 }
-
-/* FUNDO APP */
 body {
-  background: #e9eef5;
-  display: flex;
-  justify-content: center;
+  background: red !important;
 }
 
 /* CONTAINER DO APP */
