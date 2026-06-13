@@ -1,100 +1,71 @@
-/* BASE */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial;
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Arial;
 }
 
-body {
-  background: #eef3f8;
+body{
+  background:#eef3f8;
 }
 
-/* APP */
-.container {
-  max-width: 420px;
-  margin: auto;
-  padding-bottom: 70px;
+.container{
+  max-width:420px;
+  margin:auto;
+  padding-bottom:60px;
 }
 
-/* TELAS */
-.tela {
-  display: none;
+.tela{display:none;}
+.ativa{display:block;}
+
+.card{
+  background:#fff;
+  margin:15px;
+  padding:15px;
+  border-radius:12px;
+  box-shadow:0 3px 10px rgba(0,0,0,0.08);
 }
 
-.ativa {
-  display: block;
+input,textarea{
+  width:100%;
+  padding:12px;
+  margin-top:8px;
+  border:1px solid #ddd;
+  border-radius:10px;
 }
 
-/* CARD HOSPITALAR */
-.card {
-  background: #fff;
-  margin: 15px;
-  padding: 15px;
-  border-radius: 14px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+button{
+  width:100%;
+  padding:14px;
+  margin-top:10px;
+  border:none;
+  border-radius:10px;
+  background:#1565c0;
+  color:white;
 }
 
-/* INPUTS */
-input, textarea {
-  width: 100%;
-  padding: 12px;
-  margin-top: 8px;
-  border-radius: 10px;
-  border: 1px solid #ddd;
+.estrelas span{
+  font-size:28px;
+  color:#ccc;
 }
 
-/* BOTÃO */
-button {
-  width: 100%;
-  padding: 14px;
-  margin-top: 10px;
-  background: #1565c0;
-  color: white;
-  border: none;
-  border-radius: 10px;
+.estrelas span.ativa{
+  color:gold;
 }
 
-/* ESTRELAS */
-.estrelas {
-  font-size: 30px;
-  margin: 10px 0;
-  color: #ccc;
+.menu{
+  position:fixed;
+  bottom:0;
+  width:100%;
+  max-width:420px;
+  display:flex;
+  background:#fff;
+  border-top:1px solid #ddd;
 }
 
-.estrelas span.ativa {
-  color: gold;
-}
-
-/* PENDÊNCIAS */
-.item {
-  background: #f7f9fc;
-  padding: 10px;
-  border-left: 4px solid #ff9800;
-  margin-bottom: 10px;
-  border-radius: 8px;
-}
-
-/* MENU PROFISSIONAL */
-.menu {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  max-width: 420px;
-  display: flex;
-  background: #fff;
-  border-top: 1px solid #ddd;
-}
-
-.menu button {
-  flex: 1;
-  background: none;
-  border: none;
-  padding: 12px;
-  color: #666;
-}
-
-.menu button.ativo {
-  color: #1565c0;
-  font-weight: bold;
+.menu button{
+  flex:1;
+  border:none;
+  padding:12px;
+  background:none;
 }
