@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Engenharia Clínica - Avaliação</title>
-  <script src="qrcode.min.js"></script>
   
 
 <style>
@@ -565,13 +564,12 @@ function gerarQR(){
     "&data=" + encodeURIComponent(data) +
     "&hora=" + encodeURIComponent(hora);
 
-  document.getElementById("qr").innerHTML = "";
+  const qrImg =
+    "https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=" +
+    encodeURIComponent(url);
 
-new QRCode(document.getElementById("qr"), {
-  text: url,
-  width: 220,
-  height: 220
-});
+  document.getElementById("qr").innerHTML =
+    `<img src="${qrImg}" style="width:220px;height:220px;margin-top:10px;">`;
 
 }
 
