@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -128,7 +129,7 @@ button {
   display: flex;
   justify-content: center;
   gap: 6px;
-  font-size: 34px;
+  font-size: 70px;
   margin: 12px 0;
 }
 
@@ -253,15 +254,18 @@ button {
   bottom: 80px;
   left: 50%;
   transform: translateX(-50%);
-  background: #1e6bff;
+  background: #22c55e;
   color: white;
-  padding: 12px 18px;
+  padding: 14px 20px;
   border-radius: 12px;
   font-size: 14px;
+  font-weight: 600;
   opacity: 0;
   pointer-events: none;
   transition: 0.3s;
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  max-width: 90%;
+  text-align: center;
 }
 
 /* ativo */
@@ -488,6 +492,37 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
 let notaSelecionada = 0;
 let chamadoFinal = {};
 
+function limparFormulario(){
+
+  // tela chamado
+  document.getElementById("chamado").value = "";
+  document.getElementById("tecnico").value = "";
+
+  let agora = new Date();
+
+  document.getElementById("data").value =
+    agora.toISOString().split("T")[0];
+
+  document.getElementById("hora").value =
+    agora.getHours().toString().padStart(2,'0') + ":" +
+    agora.getMinutes().toString().padStart(2,'0');
+
+  // avaliação
+  notaSelecionada = 0;
+  document.getElementById("comentario").value = "";
+
+  document.querySelectorAll(".estrelas span")
+    .forEach(e => e.classList.remove("ativa"));
+
+  // resumo
+  document.getElementById("resumoChamado").innerHTML = "";
+
+  // qr code
+  document.getElementById("qr").innerHTML = "";
+
+  chamadoFinal = {};
+}
+
 const API = "https://script.google.com/macros/s/AKfycby9NyvrwB6FTjGN_n6Y9z8Ig56mdaG0HKgvDdyMNDpmZIZWu93rm-5T-kx30hJq_VYVZA/exec";
 
 window.onload = () => {
@@ -560,7 +595,7 @@ function gerarQR(){
   const data = document.getElementById("data").value;
   const hora = document.getElementById("hora").value;
 
-  const baseURL = "https://script.google.com/macros/s/AKfycbzWnyRNwah1Tshb1pMZcZdlFLz7Tv315LlIR9ahIzBGqqnfTXXg85Zbs1dy4jjdw-6TaA/exec";
+  const baseURL = "https://script.google.com/macros/s/AKfycby9NyvrwB6FTjGN_n6Y9z8Ig56mdaG0HKgvDdyMNDpmZIZWu93rm-5T-kx30hJq_VYVZA/exec";
 
   const url =
     baseURL +
@@ -605,19 +640,34 @@ function enviar(){
     comentario: document.getElementById("comentario").value
   };
 
-  if(!navigator.onLine){
-    salvar(dados);
-    mostrarToast("📴 Salvo offline");
-    return;
-  }
+ if(!navigator.onLine){
+
+  salvar(dados);
+
+  mostrarToast("😊 Obrigado pela sua avaliação. Sua opinião nos ajuda a melhorar. Salvo offline");
+
+  setTimeout(() => {
+    limparFormulario();
+    abrir("tela1");
+  }, 2000);
+
+  return;
+}
 
   fetch(API, {
     method: "POST",
     body: JSON.stringify(dados)
   })
   .then(() => {
-    mostrarToast("✔ Avaliação enviada com sucesso");
-  })
+
+  mostrarToast("😊 Obrigado pela sua avaliação. Sua opinião nos ajuda a melhorar.");
+
+  setTimeout(() => {
+    limparFormulario();
+    abrir("tela1");
+  }, 2000);
+
+})
   .catch(() => {
     salvar(dados);
     mostrarToast("⚠ Erro, salvo offline");
@@ -698,7 +748,7 @@ async function sincronizar(){
 
   setTimeout(() => {
     toast.classList.remove("show");
-  }, 2500);
+  }, 5000);
 }
 </script>
 <div id="toast" class="toast"></div>
