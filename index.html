@@ -161,33 +161,46 @@ button {
 }
 
 /* MENU INFERIOR FIXO (RESPONSIVO REAL) */
-.menu {
-  position: fixed;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  max-width: 480px;
-  height: 64px;
-  background: #ffffff;
-  display: flex;
-  border-top: 1px solid #e6e9ef;
-  box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+.menu{
+  position:fixed;
+  bottom:12px;
+  left:50%;
+  transform:translateX(-50%);
+  width:calc(100% - 24px);
+  max-width:380px;
+  height:70px;
+  background:#fff;
+  border-radius:24px;
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+  box-shadow:0 8px 25px rgba(0,0,0,.15);
+  z-index:999;
 }
 
-/* BOTÕES MENU */
-.menu button {
-  flex: 1;
-  border: none;
-  background: none;
-  font-size: 12px;
-  color: #6b7280;
+.menu button{
+  flex:1;
+  height:100%;
+  border:none;
+  background:none;
+  color:#7b8794;
+  font-size:12px;
+  font-weight:600;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  gap:4px;
+  margin:0;
+  padding:0;
 }
 
-/* ATIVO */
-.menu button.ativo {
-  color: #1e6bff;
-  font-weight: 700;
+.menu button span{
+  font-size:22px;
+}
+
+.menu button.ativo{
+  color:#1565c0;
 }
 /* CARD RESUMO HOSPITALAR */
 .card-resumo {
@@ -255,6 +268,53 @@ button {
 .toast.show {
   opacity: 1;
 }
+
+.opcao-avaliacao{
+  display:flex;
+  align-items:center;
+  background:#fff;
+  border:1px solid #e6eaf0;
+  border-radius:18px;
+  padding:18px;
+  margin-bottom:15px;
+  cursor:pointer;
+  text-align:left;
+  box-shadow:0 2px 8px rgba(0,0,0,.05);
+}
+
+.opcao-icone{
+  width:60px;
+  height:60px;
+  border-radius:50%;
+  background:#eaf2ff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:28px;
+  margin-right:15px;
+}
+
+.opcao-texto{
+  flex:1;
+}
+
+.opcao-texto b{
+  display:block;
+  font-size:18px;
+  color:#222;
+}
+
+.opcao-texto p{
+  margin-top:4px;
+  color:#666;
+  font-size:14px;
+}
+
+.seta{
+  font-size:34px;
+  color:#1565c0;
+  font-weight:300;
+}
   </style>
 
 <body>
@@ -284,18 +344,77 @@ button {
   <!-- 📌 TELA 2 - OPÇÕES -->
   <div id="tela2" class="tela">
 
-    <div class="card">
+  <div class="card" style="text-align:center;">
 
-      <h2>Como deseja avaliar?</h2>
+    <div style="
+      width:90px;
+      height:90px;
+      background:#4caf50;
+      border-radius:50%;
+      margin:10px auto 20px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:50px;
+      color:white;">
+      ✓
+    </div>
 
-      <button onclick="avaliarTablet()">⭐ Avaliar no tablet</button>
-      <button onclick="gerarQR()">📷 Gerar QR Code</button>
+    <h2 style="margin-bottom:8px;">
+      Chamado concluído com sucesso!
+    </h2>
 
-      <p id="qr"></p>
+    <p style="
+      color:#666;
+      margin-bottom:25px;
+      font-size:14px;">
+      Como deseja realizar a avaliação?
+    </p>
+
+    <!-- QR CODE -->
+    <div class="opcao-avaliacao" onclick="gerarQR()">
+
+      <div class="opcao-icone">
+        📱
+      </div>
+
+      <div class="opcao-texto">
+        <b>Gerar QR Code</b>
+        <p>Cliente avalia pelo próprio celular.</p>
+      </div>
+
+      <div class="seta">›</div>
 
     </div>
 
+    <!-- TABLET -->
+    <div class="opcao-avaliacao" onclick="avaliarTablet()">
+
+      <div class="opcao-icone">
+        ⭐
+      </div>
+
+      <div class="opcao-texto">
+        <b>Avaliar aqui</b>
+        <p>Abrir avaliação neste dispositivo.</p>
+      </div>
+
+      <div class="seta">›</div>
+
+    </div>
+
+    <div id="qr"></div>
+
+    <div style="
+      margin-top:30px;
+      color:#1565c0;
+      font-size:14px;">
+      ℹ O feedback do cliente é muito importante para nós.
+    </div>
+
   </div>
+
+</div>
 
   <!-- ⭐ TELA 3 - AVALIAÇÃO -->
   <div id="tela3" class="tela">
@@ -348,8 +467,15 @@ button {
 <!-- MENU -->
 <div class="menu">
 
-  <button onclick="abrir('tela1')" class="ativo">🏥</button>
-  <button onclick="abrir('tela4')">📡</button>
+  <button onclick="abrir('tela1')" class="ativo">
+    <span>📋</span>
+    Chamados
+  </button>
+
+  <button onclick="abrir('tela4')">
+    <span>☁️</span>
+    Offline
+  </button>
 
 </div>
 
