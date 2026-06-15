@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="manifest" href="manifest.json">
   <title>Engenharia Clínica - Avaliação</title>
   
 
@@ -749,6 +750,10 @@ async function sincronizar(){
   setTimeout(() => {
     toast.classList.remove("show");
   }, 5000);
+}
+
+  if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./service-worker.js');
 }
 </script>
 <div id="toast" class="toast"></div>
