@@ -904,18 +904,6 @@ Obrigado pela colaboração!
   document.getElementById("mensagemAvaliacao").value = msg;
 }
 
-function copiarMensagem(){
-
-  const texto =
-    document.getElementById("mensagemAvaliacao");
-
-  texto.select();
-  texto.setSelectionRange(0, 99999);
-
-  navigator.clipboard.writeText(texto.value);
-
-  mostrarToast("✔ Mensagem copiada");
-}
 
 function abrirTelaMensagem(){
 
@@ -926,6 +914,7 @@ function abrirTelaMensagem(){
   document.getElementById("mensagemAvaliacao").value = "";
 
 }
+
 
 function gerarMensagem(){
 
@@ -959,6 +948,21 @@ Obrigado pela colaboração!
 
   document.getElementById("mensagemAvaliacao").value = mensagem;
 }
+
+function copiarMensagem(){
+
+  gerarMensagem(); // atualiza antes de copiar
+
+  const texto =
+    document.getElementById("mensagemAvaliacao").value;
+
+  navigator.clipboard.writeText(texto)
+    .then(() => {
+      mostrarToast("📋 Mensagem copiada!");
+    })
+    .catch(() => {
+      alert(texto);
+  
 </script>
 <div id="toast" class="toast"></div>
 </html>
