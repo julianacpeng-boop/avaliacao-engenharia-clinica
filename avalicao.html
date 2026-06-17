@@ -969,11 +969,28 @@ Obrigado pela colaboração!
   document.getElementById("mensagemFinal").innerText = msg;
 }
 function copiarMensagem(){
+
   const texto = document.getElementById("mensagemFinal").innerText;
 
-  navigator.clipboard.writeText(texto)
-    .then(() => mostrarToast("Mensagem copiada!"))
-    .catch(() => mostrarToast("Erro ao copiar"));
+  // fallback mais compatível (principalmente Android/WebView)
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(texto)
+      .then(() => mostrarToast("Mensagem copiada!"))
+      .catch(() => fallbackCopiar(texto));
+  } else {
+    fallbackCopiar(texto);
+  }
+}
+
+function fallbackCopiar(texto) {
+  const temp = document.createElement("textarea");
+  temp.value = texto;
+  document.body.appendChild(temp);
+  temp.select();
+  document.execCommand("copy");
+  document.body.removeChild(temp);
+
+  mostrarToast("Mensagem copiada!");
 }
 
 </script>
