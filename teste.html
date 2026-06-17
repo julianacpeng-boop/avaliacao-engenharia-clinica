@@ -377,7 +377,8 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
   </div>
 
   <!-- 📌 TELA 2 - OPÇÕES -->
-  <div id="tela2" class="tela">
+  <!-- 📌 TELA 2 - OPÇÕES -->
+<div id="tela2" class="tela">
 
   <div class="card" style="text-align:center;">
 
@@ -407,7 +408,7 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
     </p>
 
     <!-- QR CODE -->
-    <div class="opcao-avaliacao" onclick="gerarQR()">
+    <div class="opcao-avaliacao" onclick="abrirTelaQR()">
 
       <div class="opcao-icone">
         📱
@@ -422,7 +423,23 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
 
     </div>
 
-    <!-- TABLET -->
+    <!-- LINK WHATSAPP -->
+    <div class="opcao-avaliacao" onclick="abrirTelaMensagem()">
+
+      <div class="opcao-icone">
+        💬
+      </div>
+
+      <div class="opcao-texto">
+        <b>Enviar Link para Avaliação</b>
+        <p>Gerar mensagem pronta para WhatsApp.</p>
+      </div>
+
+      <div class="seta">›</div>
+
+    </div>
+
+    <!-- AVALIAR NO TABLET -->
     <div class="opcao-avaliacao" onclick="avaliarTablet()">
 
       <div class="opcao-icone">
@@ -437,7 +454,6 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
       <div class="seta">›</div>
 
     </div>
-
 
     <div style="
       margin-top:30px;
@@ -496,27 +512,74 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
 
   </div>
 
-</div>
 
-
-<!-- 📱 TELA QR -->
-<div id="telaQR" class="tela">
+  <!-- 📱 TELA 5 - QR CODE -->
+<div id="tela5" class="tela">
 
   <div class="card" style="text-align:center;">
 
     <h2>QR Code para Avaliação</h2>
 
-    <div id="qrArea" style="margin:20px auto;"></div>
-
-    <p style="font-size:14px;color:#666;margin-top:15px;">
-      Escaneie o QR Code com o celular do cliente para realizar a avaliação.
+    <p style="color:#666;margin-bottom:20px;">
+      Peça ao cliente para apontar a câmera para o QR Code.
     </p>
+
+    <div id="qrTela"></div>
+
+    <button onclick="abrir('tela2')" style="margin-top:20px;">
+      ← Voltar
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- 💬 TELA 6 -->
+<!-- 💬 TELA 6 - ENVIAR LINK -->
+<div id="tela6" class="tela">
+
+  <div class="card">
+
+    <h2>Enviar Link para Avaliação</h2>
+
+    <input
+      id="equipamentoMsg"
+      placeholder="Nome do equipamento"
+    >
+
+    <input
+      id="falhaMsg"
+      placeholder="Falha apresentada"
+    >
+
+    <textarea
+      id="mensagemAvaliacao"
+      readonly
+      placeholder="A mensagem será gerada aqui..."
+      style="
+        min-height:280px;
+        margin-top:12px;
+        font-size:14px;
+        line-height:1.6;
+      ">
+    </textarea>
+
+    <button onclick="gerarMensagem()">
+      📝 Gerar Mensagem
+    </button>
+
+    <button onclick="copiarMensagem()">
+      📋 Copiar Mensagem
+    </button>
 
     <button onclick="abrir('tela2')">
       ← Voltar
     </button>
 
   </div>
+
+</div>
 
 </div>
 
@@ -639,7 +702,9 @@ function avaliarTablet(){
 }
 
 /* 📷 QR CODE (simples por enquanto) */
-function gerarQR(){
+function abrirTelaQR(){
+
+  abrir("tela5");
 
   const chamado = document.getElementById("chamado").value;
   const tecnico = document.getElementById("tecnico").value;
@@ -651,24 +716,23 @@ function gerarQR(){
   const url =
     baseURL +
     "?chamado=" + encodeURIComponent(chamado) +
-    "?tecnico=" + encodeURIComponent(tecnico) +
+    "&tecnico=" + encodeURIComponent(tecnico) +
     "&data=" + encodeURIComponent(data) +
     "&hora=" + encodeURIComponent(hora);
 
-  // abre nova tela
-  abrir("telaQR");
+  const qrDiv = document.getElementById("qrTela");
 
-  const qrDiv = document.getElementById("qrArea");
   qrDiv.innerHTML = "";
 
   new QRCode(qrDiv, {
     text: url,
-    width: 220,
-    height: 220,
-    colorDark: "#000",
-    colorLight: "#fff",
+    width: 260,
+    height: 260,
+    colorDark: "#000000",
+    colorLight: "#ffffff",
     correctLevel: QRCode.CorrectLevel.H
   });
+
 }
 
 /* ⭐ estrelas */
@@ -804,6 +868,96 @@ async function sincronizar(){
 
   if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('./service-worker.js');
+}
+
+function abrirTelaMensagem(){
+
+  abrir("tela6");
+
+  const chamado = document.getElementById("chamado").value;
+  const tecnico = document.getElementById("tecnico").value;
+  const equipamento = document.getElementById("equipamento").value;
+  const falha = document.getElementById("falha").value;
+  const data = document.getElementById("data").value;
+  const hora = document.getElementById("hora").value;
+
+  const link =
+    "https://script.google.com/a/macros/hlaureano.org.br/s/AKfycbwo5r0fm0dmUK3VxMFnNkfNa2i5ani-DacR1PCHZtaom9IHEEgPX2uz3uHqCyvqU3d4/exec" +
+    "?chamado=" + encodeURIComponent(chamado) +
+    "&tecnico=" + encodeURIComponent(tecnico) +
+    "&data=" + encodeURIComponent(data) +
+    "&hora=" + encodeURIComponent(hora);
+
+  const msg =
+`Olá!
+
+O chamado do equipamento *${equipamento}*, referente à falha *${falha}*, foi concluído por *${tecnico}* em *${data}* às *${hora}*.
+
+Por favor, avalie o atendimento pelo link abaixo:
+
+${link}
+
+Obrigado pela colaboração!
+
+*Engenharia Clínica*`;
+
+  document.getElementById("mensagemAvaliacao").value = msg;
+}
+
+function copiarMensagem(){
+
+  const texto =
+    document.getElementById("mensagemAvaliacao");
+
+  texto.select();
+  texto.setSelectionRange(0, 99999);
+
+  navigator.clipboard.writeText(texto.value);
+
+  mostrarToast("✔ Mensagem copiada");
+}
+
+function abrirTelaMensagem(){
+
+  abrir("tela6");
+
+  document.getElementById("equipamentoMsg").value = "";
+  document.getElementById("falhaMsg").value = "";
+  document.getElementById("mensagemAvaliacao").value = "";
+
+}
+
+function gerarMensagem(){
+
+  const chamado = document.getElementById("chamado").value;
+  const tecnico = document.getElementById("tecnico").value;
+  const data = document.getElementById("data").value;
+  const hora = document.getElementById("hora").value;
+
+  const equipamento = document.getElementById("equipamentoMsg").value;
+  const falha = document.getElementById("falhaMsg").value;
+
+  const link =
+    "https://script.google.com/a/macros/hlaureano.org.br/s/AKfycbwo5r0fm0dmUK3VxMFnNkfNa2i5ani-DacR1PCHZtaom9IHEEgPX2uz3uHqCyvqU3d4/exec" +
+    "?chamado=" + encodeURIComponent(chamado) +
+    "&tecnico=" + encodeURIComponent(tecnico) +
+    "&data=" + encodeURIComponent(data) +
+    "&hora=" + encodeURIComponent(hora);
+
+  const mensagem =
+`Olá!
+
+O chamado do equipamento *${equipamento}*, referente à falha *${falha}*, foi concluído por *${tecnico}* em *${data}* às *${hora}*.
+
+Por favor, avalie o atendimento pelo link abaixo:
+
+${link}
+
+Obrigado pela colaboração!
+
+*Engenharia Clínica*`;
+
+  document.getElementById("mensagemAvaliacao").value = mensagem;
 }
 </script>
 <div id="toast" class="toast"></div>
