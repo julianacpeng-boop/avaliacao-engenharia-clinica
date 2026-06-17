@@ -445,7 +445,7 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
 
       <div class="opcao-texto">
         <b>Gerar QR Code</b>
-        <p>Cliente avalia pelo próprio celular.</p>
+        <p>Avalia pelo próprio celular.</p>
       </div>
 
       <div class="seta">›</div>
@@ -488,7 +488,7 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
       margin-top:30px;
       color:#1565c0;
       font-size:14px;">
-      ℹ O feedback do cliente é muito importante para nós.
+      ℹ Seu feedback é muito importante para nós.
     </div>
 
   </div>
@@ -543,24 +543,76 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
 
 
   <!-- 📱 TELA 5 - QR CODE -->
+<!-- 📱 TELA 5 - QR CODE NOVA UI -->
 <div id="tela5" class="tela">
 
-  <div class="card" style="text-align:center;">
+  <div class="card" style="
+    text-align:center;
+    background: linear-gradient(180deg, #ffffff, #f3f7ff);
+    border-radius:22px;
+    padding:20px;
+  ">
 
     <button class="btn-voltar" onclick="abrir('tela2')">
-  ← Voltar
-</button>
+      ← Voltar
+    </button>
 
-    <h2>QR Code para Avaliação</h2>
+    <!-- ÍCONE -->
+    <div style="
+      width:80px;
+      height:80px;
+      margin:10px auto 10px;
+      border-radius:50%;
+      background:#e8f1ff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:38px;
+      box-shadow:0 8px 20px rgba(21,101,192,0.15);
+    ">
+      📱
+    </div>
 
-    <p style="color:#666; font-size:14px; margin-bottom:15px;">
-      Escaneie com o celular do cliente
+    <h2 style="margin-bottom:6px; color:#1d2b3a;">
+      QR Code de Avaliação
+    </h2>
+
+    <p style="
+      color:#6b7280;
+      font-size:14px;
+      margin-bottom:18px;
+    ">
+      Aponte a câmera do celular para avaliar o atendimento
     </p>
 
-    <div id="qr"></div>
+    <!-- QR AREA -->
+    <div style="
+      background:#fff;
+      padding:18px;
+      border-radius:18px;
+      display:inline-block;
+      box-shadow:0 10px 25px rgba(0,0,0,0.08);
+      border:1px solid #eef2f7;
+    ">
+      <div id="qr"></div>
+    </div>
 
-    <div style="margin-top:20px; font-size:13px; color:#1565c0;">
-      ℹ Obrigado por usar nosso sistema
+    <!-- INFO -->
+    <div style="
+      margin-top:18px;
+      font-size:13px;
+      color:#1565c0;
+      font-weight:600;
+    ">
+      ✔ Escaneie e avalie em segundos
+    </div>
+
+    <div style="
+      margin-top:6px;
+      font-size:12px;
+      color:#9ca3af;
+    ">
+      Engenharia Clínica • Hospital Napoleão Laureano
     </div>
 
   </div>
@@ -569,18 +621,19 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
 
 <!-- 💬 TELA 6 - GERADOR DE MENSAGEM -->
 <!-- 💬 TELA 6 - MENSAGEM WHATSAPP MELHORADA -->
+<!-- 💬 TELA 6 - WHATSAPP NOVA UI -->
 <div id="tela6" class="tela">
 
-  <div class="card">
+  <div class="card" style="background:#f5f7fb;">
 
-    <!-- BOTÃO VOLTAR MELHORADO -->
+    <!-- HEADER -->
     <button onclick="abrir('tela2')" style="
       display:flex;
       align-items:center;
       gap:8px;
-      background:#f1f5f9;
+      background:#ffffff;
       color:#333;
-      border:none;
+      border:1px solid #e5e7eb;
       padding:10px 14px;
       border-radius:12px;
       font-weight:600;
@@ -590,58 +643,69 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
       ← Voltar
     </button>
 
-    <h2 style="margin-bottom:15px;">
-      Pré-visualização de mensagem
+    <h2 style="margin-bottom:10px;">
+      Pré-visualização WhatsApp
     </h2>
 
-    <!-- CAMPOS MELHORADOS -->
-    <div style="background:#fff; padding:12px; border-radius:14px; border:1px solid #e5e7eb; margin-bottom:12px;">
-      <label style="font-size:12px; color:#666;">Equipamento</label>
-      <input id="equipamento" placeholder="Ex: Monitor multiparamétrico" style="border:none; padding:8px 0;">
+    <p style="color:#6b7280; font-size:13px; margin-bottom:15px;">
+      Veja como sua mensagem será enviada ao usuário
+    </p>
+
+    <!-- CAMPOS -->
+    <div style="background:#fff; padding:12px; border-radius:14px; margin-bottom:10px; border:1px solid #e5e7eb;">
+      <label style="font-size:12px; color:#6b7280;">Equipamento</label>
+      <input id="equipamento" placeholder="Ex: Monitor multiparamétrico"
+        style="border:none; outline:none; padding:6px 0;">
     </div>
 
-    <div style="background:#fff; padding:12px; border-radius:14px; border:1px solid #e5e7eb; margin-bottom:15px;">
-      <label style="font-size:12px; color:#666;">Falha</label>
-      <input id="falha" placeholder="Ex: não liga / travamento / alarme" style="border:none; padding:8px 0;">
+    <div style="background:#fff; padding:12px; border-radius:14px; margin-bottom:12px; border:1px solid #e5e7eb;">
+      <label style="font-size:12px; color:#6b7280;">Falha</label>
+      <input id="falha" placeholder="Ex: não liga / travamento"
+        style="border:none; outline:none; padding:6px 0;">
     </div>
 
     <button onclick="gerarMensagem()" style="
+      width:100%;
       background:#1e6bff;
       border-radius:12px;
       margin-bottom:15px;
     ">
-      Gerar prévia
+      Gerar mensagem
     </button>
 
-    <!-- PREVIEW WHATSAPP -->
+    <!-- CHAT PREVIEW -->
     <div style="
       background:#e5ddd5;
-      padding:12px;
+      padding:14px;
       border-radius:16px;
-      min-height:220px;
-      font-size:13px;
+      min-height:240px;
+      display:flex;
+      flex-direction:column;
+      justify-content:flex-end;
     ">
 
+      <!-- bolha estilo WhatsApp -->
       <div id="mensagemFinal" style="
-  background:#dcf8c6;
-  padding:12px;
-  border-radius:12px;
-  white-space:pre-wrap;
-  word-wrap:break-word;
-  overflow-wrap:break-word;
-  word-break:break-word;
-  line-height:1.4;
-  box-shadow:0 2px 6px rgba(0,0,0,0.08);
-">
+        align-self:flex-end;
+        background:#dcf8c6;
+        padding:12px 14px;
+        border-radius:14px 14px 0 14px;
+        max-width:85%;
+        font-size:13px;
+        line-height:1.4;
+        box-shadow:0 2px 6px rgba(0,0,0,0.08);
+        white-space:pre-wrap;
+      ">
         Sua mensagem aparecerá aqui...
       </div>
 
     </div>
 
     <button onclick="copiarMensagem()" style="
+      width:100%;
+      margin-top:12px;
       background:#22c55e;
       border-radius:12px;
-      margin-top:12px;
     ">
       Copiar mensagem
     </button>
@@ -957,7 +1021,8 @@ function gerarMensagem(){
     "?data=" + encodeURIComponent(data) +
     "?hora=" + encodeURIComponent(hora);
 
-  const msg = `Olá, o chamado do equipamento *${equipamento}*, referente à falha *${falha}*, foi concluído por *${tecnico}* em *${data}* às *${hora}*.
+  const msg = `Olá 😁,
+  O chamado do equipamento *${equipamento}*, referente à falha *${falha}*, foi concluído por *${tecnico}* em *${data}* às *${hora}*.
 
 Por favor, avalie o atendimento pelo link abaixo:
 
