@@ -374,6 +374,16 @@ button {
   overflow-wrap: break-word;
   word-break: break-word;
 }
+
+#mensagemFinal {
+  text-align: justify;
+  line-height: 1.25;
+  font-size: 13px;
+}
+
+#mensagemFinal p {
+  margin: 2px 0;
+}
   </style>
 
 <body>
@@ -630,7 +640,7 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
   word-wrap:break-word;
   overflow-wrap:break-word;
   word-break:break-word;
-  line-height:1.4;
+  line-height:1.25;
   box-shadow:0 2px 6px rgba(0,0,0,0.08);
 ">
         Sua mensagem aparecerá aqui...
@@ -957,7 +967,41 @@ function gerarMensagem(){
     "?data=" + encodeURIComponent(data) +
     "?hora=" + encodeURIComponent(hora);
 
-  const msg = `Olá 😁, o chamado do equipamento *${equipamento}*, referente à falha *${falha}*, foi concluído por *${tecnico}* em *${data}* às *${hora}*.
+const msgFormatada = `
+<p>Olá 😁
+o chamado do equipamento <b>${equipamento}</b>, referente à falha <b>${falha}</b>, foi concluído por <b>${tecnico}</b> em <b>${data}</b> às <b>${hora}</b>.</p>
+
+<p>Por favor, avalie o atendimento pelo link abaixo:</p>
+
+<p>${url}</p>
+
+<p>Obrigado pela colaboração!<br><b>Engenharia Clínica</b></p>
+`;
+
+document.getElementById("mensagemFinal").innerHTML = msgFormatada;
+}
+
+function gerarTextoCopiar(){
+
+  const equipamento = document.getElementById("equipamento").value;
+  const falha = document.getElementById("falha").value;
+
+  const chamado = chamadoFinal.chamado || document.getElementById("chamado").value;
+  const tecnico = chamadoFinal.tecnico || document.getElementById("tecnico").value;
+  const data = chamadoFinal.data || document.getElementById("data").value;
+  const hora = chamadoFinal.hora || document.getElementById("hora").value;
+
+  const baseURL = "https://script.google.com/a/macros/hlaureano.org.br/s/AKfycbwo5r0fm0dmUK3VxMFnNkfNa2i5ani-DacR1PCHZtaom9IHEEgPX2uz3uHqCyvqU3d4/exec";
+
+  const url =
+    baseURL +
+    "?chamado=" + encodeURIComponent(chamado) +
+    "&tecnico=" + encodeURIComponent(tecnico) +
+    "&data=" + encodeURIComponent(data) +
+    "&hora=" + encodeURIComponent(hora);
+
+const msg = `Olá 😁
+o chamado do equipamento *${equipamento}*, referente à falha *${falha}*, foi concluído por *${tecnico}* em *${data}* às *${hora}*.
 
 Por favor, avalie o atendimento pelo link abaixo:
 
@@ -965,14 +1009,13 @@ ${url}
 
 Obrigado pela colaboração!
 *Engenharia Clínica*`;
-
-  document.getElementById("mensagemFinal").innerText = msg;
+  return msg;
 }
+
 function copiarMensagem(){
 
-  const texto = document.getElementById("mensagemFinal").innerText;
+  const texto = gerarTextoCopiar();
 
-  // fallback mais compatível (principalmente Android/WebView)
   if (navigator.clipboard && window.isSecureContext) {
     navigator.clipboard.writeText(texto)
       .then(() => mostrarToast("Mensagem copiada!"))
@@ -980,17 +1023,6 @@ function copiarMensagem(){
   } else {
     fallbackCopiar(texto);
   }
-}
-
-function fallbackCopiar(texto) {
-  const temp = document.createElement("textarea");
-  temp.value = texto;
-  document.body.appendChild(temp);
-  temp.select();
-  document.execCommand("copy");
-  document.body.removeChild(temp);
-
-  mostrarToast("Mensagem copiada!");
 }
 
 </script>
