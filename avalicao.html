@@ -345,6 +345,35 @@ button {
   font-size:10px;
   color:#9ca3af;
 }
+
+.btn-voltar{
+  width:auto;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:10px 14px;
+  margin-bottom:15px;
+  background:#f1f5f9;
+  color:#1d2b3a;
+  border:1px solid #e2e8f0;
+  border-radius:12px;
+  font-size:14px;
+  font-weight:600;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.btn-voltar:hover{
+  background:#e2e8f0;
+  transform:scale(1.02);
+}
+
+#mensagemFinal {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
   </style>
 
 <body>
@@ -518,15 +547,9 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
 
   <div class="card" style="text-align:center;">
 
-    <button onclick="abrir('tela2')" style="
-      width:auto;
-      margin-bottom:15px;
-      background:#eee;
-      color:#333;
-      font-weight:600;
-    ">
-      ← Voltar
-    </button>
+    <button class="btn-voltar" onclick="abrir('tela2')">
+  ← Voltar
+</button>
 
     <h2>QR Code para Avaliação</h2>
 
@@ -545,31 +568,81 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
 </div>
 
 <!-- 💬 TELA 6 - GERADOR DE MENSAGEM -->
+<!-- 💬 TELA 6 - MENSAGEM WHATSAPP MELHORADA -->
 <div id="tela6" class="tela">
 
   <div class="card">
 
+    <!-- BOTÃO VOLTAR MELHORADO -->
     <button onclick="abrir('tela2')" style="
-      width:auto;
-      margin-bottom:15px;
-      background:#eee;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      background:#f1f5f9;
       color:#333;
+      border:none;
+      padding:10px 14px;
+      border-radius:12px;
       font-weight:600;
+      margin-bottom:15px;
+      width:auto;
     ">
       ← Voltar
     </button>
 
-    <h2>Gerar Mensagem WhatsApp</h2>
+    <h2 style="margin-bottom:15px;">
+      Pré-visualização de mensagem
+    </h2>
 
-    <input id="equipamento" placeholder="Nome do equipamento">
+    <!-- CAMPOS MELHORADOS -->
+    <div style="background:#fff; padding:12px; border-radius:14px; border:1px solid #e5e7eb; margin-bottom:12px;">
+      <label style="font-size:12px; color:#666;">Equipamento</label>
+      <input id="equipamento" placeholder="Ex: Monitor multiparamétrico" style="border:none; padding:8px 0;">
+    </div>
 
-    <input id="falha" placeholder="Falha (ex: não realiza movimento)">
+    <div style="background:#fff; padding:12px; border-radius:14px; border:1px solid #e5e7eb; margin-bottom:15px;">
+      <label style="font-size:12px; color:#666;">Falha</label>
+      <input id="falha" placeholder="Ex: não liga / travamento / alarme" style="border:none; padding:8px 0;">
+    </div>
 
-    <button onclick="gerarMensagem()">Gerar mensagem</button>
+    <button onclick="gerarMensagem()" style="
+      background:#1e6bff;
+      border-radius:12px;
+      margin-bottom:15px;
+    ">
+      Gerar prévia
+    </button>
 
-    <textarea id="mensagemFinal" style="margin-top:15px; min-height:220px;"></textarea>
+    <!-- PREVIEW WHATSAPP -->
+    <div style="
+      background:#e5ddd5;
+      padding:12px;
+      border-radius:16px;
+      min-height:220px;
+      font-size:13px;
+    ">
 
-    <button onclick="copiarMensagem()" style="background:#22c55e;">
+      <div id="mensagemFinal" style="
+  background:#dcf8c6;
+  padding:12px;
+  border-radius:12px;
+  white-space:pre-wrap;
+  word-wrap:break-word;
+  overflow-wrap:break-word;
+  word-break:break-word;
+  line-height:1.4;
+  box-shadow:0 2px 6px rgba(0,0,0,0.08);
+">
+        Sua mensagem aparecerá aqui...
+      </div>
+
+    </div>
+
+    <button onclick="copiarMensagem()" style="
+      background:#22c55e;
+      border-radius:12px;
+      margin-top:12px;
+    ">
       Copiar mensagem
     </button>
 
@@ -880,32 +953,27 @@ function gerarMensagem(){
   const url =
     baseURL +
     "?chamado=" + encodeURIComponent(chamado) +
-    "&tecnico=" + encodeURIComponent(tecnico) +
-    "&data=" + encodeURIComponent(data) +
-    "&hora=" + encodeURIComponent(hora);
+    "?tecnico=" + encodeURIComponent(tecnico) +
+    "?data=" + encodeURIComponent(data) +
+    "?hora=" + encodeURIComponent(hora);
 
-  const msg = `Olá, O chamado do equipamento *${equipamento}*, referente à falha *${falha}*, foi concluído por *${tecnico}* em *${data}* às *${hora}*.
+  const msg = `Olá, o chamado do equipamento *${equipamento}*, referente à falha *${falha}*, foi concluído por *${tecnico}* em *${data}* às *${hora}*.
 
 Por favor, avalie o atendimento pelo link abaixo:
 
 ${url}
 
 Obrigado pela colaboração!
-
 *Engenharia Clínica*`;
 
-  document.getElementById("mensagemFinal").value = msg;
+  document.getElementById("mensagemFinal").innerText = msg;
 }
-
 function copiarMensagem(){
-  const texto = document.getElementById("mensagemFinal");
+  const texto = document.getElementById("mensagemFinal").innerText;
 
-  texto.select();
-  texto.setSelectionRange(0, 99999);
-
-  document.execCommand("copy");
-
-  mostrarToast("Mensagem copiada!");
+  navigator.clipboard.writeText(texto)
+    .then(() => mostrarToast("Mensagem copiada!"))
+    .catch(() => mostrarToast("Erro ao copiar"));
 }
 
 </script>
