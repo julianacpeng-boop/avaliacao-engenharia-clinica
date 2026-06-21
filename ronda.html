@@ -609,8 +609,7 @@ function assinar(tipo){
 
   let canvas = document.getElementById(canvasId);
 
-   // 👇 AQUI ESTÁ A CORREÇÃO
-  ajustarCanvas(canvas);
+  
 
   r.assinaturas[tipo] = canvas.toDataURL("image/png");
 
@@ -640,6 +639,8 @@ function assinar(tipo){
   }
 
   salvar();
+  mostrarToast("Ronda finalizada com sucesso!");
+  
 
   if(
     r.assinaturas.tecnico &&
@@ -1405,19 +1406,22 @@ function ajustarCanvas(canvas){
 
   const rect = canvas.getBoundingClientRect();
 
-  // MUITO IMPORTANTE: ajusta o tamanho interno
+  // salva desenho atual
+  const ctx = canvas.getContext("2d");
+  const img = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
   canvas.width = rect.width;
   canvas.height = rect.height;
+
+  ctx.putImageData(img, 0, 0);
 }
 
 
 window.addEventListener("resize", () => {
-
   ["c1","c2","c3"].forEach(id => {
     const canvas = document.getElementById(id);
     if(canvas) ajustarCanvas(canvas);
   });
-
 });
 
 </script>
