@@ -40,11 +40,15 @@ button:not(.menu-btn){
   color:white;
 }
 canvas{
-  width:100%;
-  height:150px;
-  border:1px solid #000;
-  background:#fff;
-  touch-action:none;
+  width: 100%;
+  height: 220px;
+  border: 1px solid #ccc;
+  background: #fff;
+  touch-action: none;
+}
+
+.assinatura-box{
+  margin-bottom: 20px;
 }
 #statusRonda{margin-top:20px;padding:20px;text-align:center;font-weight:bold;background:#ff9800;color:#fff;border-radius:10px}
 .card{
@@ -286,9 +290,20 @@ Testar Limpeza
  
 <button onclick="salvarResponsavelSetor()">Salvar responsável do setor</button>
 
-<h3>Técnico</h3><canvas id="c1"></canvas><button onclick="assinar('tecnico')">Assinar</button><button onclick="limparCanvas('c1')">Limpar assinatura técnico</button>
-<h3>Coordenador Setor</h3><canvas id="c2"></canvas><button onclick="assinar('setor')">Assinar</button><button onclick="limparCanvas('c2')">Limpar assinatura setor</button>
-<h3>Coordenação Engenharia</h3><canvas id="c3"></canvas><button onclick="assinar('engenharia')">Assinar</button><button onclick="limparCanvas('c3')">Limpar assinatura engenharia</button>
+<h3>Técnico</h3>
+<canvas id="c1"></canvas>
+<button onclick="assinar('tecnico')">Assinar</button>
+<button onclick="limparCanvas('c1')">Limpar assinatura técnico</button>
+
+<h3>Coordenador Setor</h3>
+<canvas id="c2"></canvas>
+<button onclick="assinar('setor')">Assinar</button>
+<button onclick="limparCanvas('c2')">Limpar assinatura setor</button>
+
+<h3>Coordenação Engenharia</h3>
+<canvas id="c3"></canvas>
+<button onclick="assinar('engenharia')">Assinar</button>
+<button onclick="limparCanvas('c3')">Limpar assinatura engenharia</button>
 <button class="proximo" onclick="abrirResumo()">Voltar</button>
 <div id="statusRonda">PENDENTE</div>
 </section>
@@ -597,43 +612,43 @@ h += `
   resumoCompleto.innerHTML = `<div class="resumo-texto">${h}</div>`;
   trocarTela('telaResumo');
 }
-
 function assinar(tipo){
 
   let r = rondas[setorAtual];
 
-  let canvasId =
-    tipo === "tecnico" ? "c1" :
-    tipo === "setor" ? "c2" :
-    "c3";
+  const mapCanvas = {
+    tecnico: "c1",
+    setor: "c2",
+    engenharia: "c3"
+  };
 
-  let canvas = document.getElementById(canvasId);
+  let canvas = document.getElementById(mapCanvas[tipo]);
 
-  r.assinaturas[tipo] = canvas.toDataURL("image/png");
+  if(canvas){
+    r.assinaturas[tipo] = canvas.toDataURL("image/png");
+  }
 
   r.assinantes = r.assinantes || {};
 
-  if(tipo === "setor"){
-  r.assinantes.setor = {
-    nome: document.getElementById("nomeSetor").value,
-    funcao: document.getElementById("funcSetor").value,
-    data: new Date().toLocaleString(),
-    setor: setorAtual
-  };
-}
-
-  if(tipo === "tecnico"){
-    r.assinantes.tecnico = {
+  const dadosAssinante = {
+    tecnico: {
       nome: "Paulo Roberto",
       funcao: "Técnico em Equipamentos Biomédicos"
-    };
-  }
-
-  if(tipo === "engenharia"){
-    r.assinantes.engenharia = {
+    },
+    setor: {
+      nome: document.getElementById("nomeSetor").value,
+      funcao: document.getElementById("funcSetor").value,
+      data: new Date().toLocaleString(),
+      setor: setorAtual
+    },
+    engenharia: {
       nome: "Juliana Coelho",
       funcao: "Coordenadora de Engenharia Clínica"
-    };
+    }
+  };
+
+  if(dadosAssinante[tipo]){
+    r.assinantes[tipo] = dadosAssinante[tipo];
   }
 
   salvar();
@@ -1397,6 +1412,23 @@ function excluirNC(i){
   salvar();
   renderNC();
 }
+
+function focarAssinatura(idCanvas){
+
+  // esconde tudo
+  document.querySelectorAll(".assinatura-box")
+    .forEach(b => b.style.display = "none");
+
+  // mostra só o selecionado
+  document.getElementById("box-" + idCanvas)
+    .style.display = "block";
+
+  const canvas = document.getElementById(idCanvas);
+
+  // força tela cheia visual
+  canvas.style.height = "70vh";
+}
+
 
 </script>
 </body>
