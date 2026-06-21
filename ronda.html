@@ -601,28 +601,33 @@ h += `
 function assinar(tipo){
 
   let r = rondas[setorAtual];
+  if(!r) return;
 
   let canvasId =
     tipo === "tecnico" ? "c1" :
     tipo === "setor" ? "c2" :
     "c3";
 
-  let canvas = document.getElementById(canvasId);
+  // 🔒 bloqueia SOMENTE c1 e c2 se finalizado
+  if(r.finalizado === true && (tipo === "tecnico" || tipo === "setor")){
+    mostrarToast("Ronda finalizada. Não é possível alterar essa assinatura.");
+    return;
+  }
 
-  
+  let canvas = document.getElementById(canvasId);
 
   r.assinaturas[tipo] = canvas.toDataURL("image/png");
 
   r.assinantes = r.assinantes || {};
 
   if(tipo === "setor"){
-  r.assinantes.setor = {
-    nome: document.getElementById("nomeSetor").value,
-    funcao: document.getElementById("funcSetor").value,
-    data: new Date().toLocaleString(),
-    setor: setorAtual
-  };
-}
+    r.assinantes.setor = {
+      nome: document.getElementById("nomeSetor").value,
+      funcao: document.getElementById("funcSetor").value,
+      data: new Date().toLocaleString(),
+      setor: setorAtual
+    };
+  }
 
   if(tipo === "tecnico"){
     r.assinantes.tecnico = {
@@ -639,8 +644,7 @@ function assinar(tipo){
   }
 
   salvar();
-  mostrarToast("Ronda finalizada com sucesso!");
-  
+  mostrarToast("Assinatura salva com sucesso!");
 
   if(
     r.assinaturas.tecnico &&
@@ -651,7 +655,6 @@ function assinar(tipo){
     statusRonda.style.background = "green";
   }
 }
-
 function salvar(){
 
   localStorage.setItem("rondas", JSON.stringify(rondas));
@@ -903,13 +906,20 @@ function carregarAssinatura(canvasId, imagem){
 }
 
 function limparCanvas(id){
+
+  let r = rondas[setorAtual];
+  if(!r) return;
+
+  // 🔒 bloqueia SOMENTE se finalizado for true
+  if(r.finalizado === true && (id === "c1" || id === "c2")){
+    mostrarToast("Ronda finalizada. Não é possível alterar assinatura.");
+    return;
+  }
+
   const canvas = document.getElementById(id);
   const ctx = canvas.getContext("2d");
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  // também remove do storage interno se já tinha salvo
-  let r = rondas[setorAtual];
 
   if(id === "c1") r.assinaturas.tecnico = "";
   if(id === "c2") r.assinaturas.setor = "";
