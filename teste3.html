@@ -6,7 +6,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 <title>Ronda Hospitalar</title>
 <style>
@@ -338,9 +338,6 @@ header h1{
 </style>
 </head>
 <body>
-
-  
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <header>
   <div class="header-container">
     <button class="menu-btn" onclick="voltarInicio()">☰</button>
@@ -1866,7 +1863,9 @@ function marcarMenuAtivo(id){
       .classList.add("ativo");
 }
 
-
+window.onerror = function(msg, url, line){
+  alert("ERRO: " + msg + " linha " + line);
+};
 
 </script>
 </body>
