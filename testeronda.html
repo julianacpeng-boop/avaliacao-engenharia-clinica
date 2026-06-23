@@ -801,7 +801,7 @@ Testar Limpeza
   <h3>Assinantes da Ronda</h3>
 
   <b>Técnico</b>
-  <p>Diego - Técnico em Equipamentos Biomédicos</p>
+  <p>Diego Araújo Gama - Técnico em eletrotécnica</p>
 
   <b>Coordenação Engenharia</b>
   <p>Juliana Coelho - Coordenadora de Engenharia Clínica</p>
@@ -1558,8 +1558,8 @@ h += `
 
     <div style="margin-bottom:25px">
       <img src="${r.assinaturas.tecnico}" style="max-width:300px; border-bottom:1px solid #ccc;"><br>
-      <span>${r.assinantes?.tecnico?.nome || "Não informado"}</span><br>
-      <small>${r.assinantes?.tecnico?.funcao || ""}</small>
+      <span>${r.assinantes?.tecnico?.nome || "Diego Araújo Gama"}</span><br>
+      <small>${r.assinantes?.tecnico?.funcao || "Técnico em eletrotécnica"}</small>
     </div>
 
     <div style="margin-bottom:25px">
@@ -1619,8 +1619,8 @@ function assinar(tipo){
 
   if(tipo === "tecnico"){
     r.assinantes.tecnico = {
-      nome: "Diego",
-      funcao: "Técnico em Equipamentos Biomédicos"
+      nome: "Diego Araújo Gama",
+      funcao: "Técnico em eletrotécnica"
     };
   }
 
