@@ -504,7 +504,7 @@ Testar Limpeza
     <small>Resumo</small>
   </button>
 
-  <button id="btnAssinatura" onclick="trocarTela('telaAssinaturas')">
+  <button id="btnAssinatura" onclick="abrirAssinaturas()">
     <span class="material-icons">draw</span>
     <small>Assinaturas</small>
   </button>
@@ -1079,29 +1079,24 @@ function abrirAssinaturas(){
 function configurarCanvas(id){
 
   const canvas = document.getElementById(id);
-
-  canvas.width = window.innerWidth - 40;
-  canvas.height = 150;
-
   const ctx = canvas.getContext("2d");
+
+  canvas.width = canvas.offsetWidth;
+  canvas.height = 150;
 
   let desenhando = false;
 
-  canvas.onpointerdown = function(e){
-
+  canvas.onpointerdown = (e) => {
     desenhando = true;
 
     const rect = canvas.getBoundingClientRect();
 
     ctx.beginPath();
-    ctx.moveTo(
-      e.clientX - rect.left,
-      e.clientY - rect.top
-    );
-
+    ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
   };
 
-  canvas.onpointermove = function(e){
+  // 👇 É AQUI que entra o pointermove
+  canvas.onpointermove = (e) => {
 
     if(!desenhando) return;
 
@@ -1116,17 +1111,10 @@ function configurarCanvas(id){
     );
 
     ctx.stroke();
-
   };
 
-  canvas.onpointerup = function(){
-    desenhando = false;
-  };
-
-  canvas.onpointerleave = function(){
-    desenhando = false;
-  };
-
+  canvas.onpointerup = () => desenhando = false;
+  canvas.onpointerleave = () => desenhando = false;
 }
 
 
