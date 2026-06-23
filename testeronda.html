@@ -482,6 +482,16 @@ Testar Limpeza
 <button class="sim" onclick="mostrarEquipamentos(true)">SIM</button>
 <button class="nao" onclick="mostrarEquipamentos(false)">NÃO</button>
 <div id="formEquipamento" style="display:none">
+  <label style="
+        display:block;
+        margin-bottom:8px;
+        font-weight:600;
+        font-size:15px;
+         margin-top: 20px;
+      ">
+        Informe os dados do equipamento:
+        <span style="color:red">*</span>
+      </label>
 <input id="nomeEquip" placeholder="Nome">
 <input id="patrimonioEquip" placeholder="Patrimônio">
 <input id="serieEquip" placeholder="Série">
@@ -492,19 +502,137 @@ Testar Limpeza
 </section>
 
 <section id="telaNC" class="tela">
-<h2>Não Conformidades</h2>
- <div class="info-setor">
-  <b>Setor:</b> <span class="setorAtualTexto"></span>
-</div>
-<p>Existe não conformidade?</p>
-<button class="sim" onclick="mostrarNC(true)">SIM</button>
-<button class="nao" onclick="mostrarNC(false)">NÃO</button>
-<div id="formNC" style="display:none">
-<input type="file" id="fotoNC" accept="image/*">
-<textarea id="descricaoNC" placeholder="Descrição"></textarea>
-<button onclick="adicionarNC()">Adicionar</button>
-</div>
-<div id="listaNC"></div>
+
+  <h2>Não Conformidades</h2>
+
+  <div class="info-setor">
+    <b>Setor:</b>
+    <span class="setorAtualTexto"></span>
+  </div>
+
+  <p>Existe não conformidade?</p>
+
+  <button class="sim" onclick="mostrarNC(true)">SIM</button>
+  <button class="nao" onclick="mostrarNC(false)">NÃO</button>
+
+  <div id="formNC" style="display:none">
+
+    <!-- DESCRIÇÃO -->
+
+    <div style="margin-top:20px;">
+
+      <label style="
+        display:block;
+        margin-bottom:8px;
+        font-weight:600;
+        font-size:15px;
+      ">
+        Descreva a não conformidade:
+        <span style="color:red">*</span>
+      </label>
+
+      <textarea
+        id="descricaoNC"
+        placeholder="Descreva aqui a não conformidade identificada..."
+        style="
+          width:100%;
+          min-height:140px;
+          padding:15px;
+          border:1px solid #dbe2ea;
+          border-radius:12px;
+          font-size:15px;
+          resize:vertical;
+          box-sizing:border-box;
+        ">
+      </textarea>
+
+    </div>
+
+    <!-- EVIDÊNCIA -->
+
+    <div style="margin-top:20px;">
+
+      <label style="
+        display:block;
+        margin-bottom:8px;
+        font-weight:600;
+        font-size:15px;
+      ">
+        Evidência (foto):
+        <span style="color:red">*</span>
+      </label>
+
+      <label for="fotoNC" id="areaFotoNC"
+  style="
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    height:170px;
+    border:2px dashed #1565c0;
+    border-radius:12px;
+    background:#f8fbff;
+    cursor:pointer;
+  ">
+
+  <span id="iconeCamera"
+    class="material-icons"
+    style="
+      font-size:60px;
+      color:#1565c0;
+      margin-bottom:10px;
+    ">
+    add_a_photo
+  </span>
+
+  <div id="textoFoto"
+    style="
+      font-weight:600;
+      color:#1565c0;
+      margin-bottom:5px;
+    ">
+    Adicionar Foto
+  </div>
+
+  <div id="textoObrigatorio"
+    style="
+      font-size:13px;
+      color:#777;
+    ">
+    (Obrigatório)
+  </div>
+
+  <img
+    id="previewFotoNC"
+    style="
+      display:none;
+      max-width:80px;
+      max-height:80px;
+      border-radius:8px;
+      border:1px solid #ddd;
+    ">
+
+</label>
+
+<input
+  type="file"
+  id="fotoNC"
+  accept="image/*"
+  style="display:none">
+
+    </div>
+
+    <!-- BOTÃO -->
+
+    <button
+      onclick="adicionarNC()"
+      style="margin-top:20px;">
+      Adicionar Não Conformidade
+    </button>
+
+  </div>
+
+  <div id="listaNC"></div>
 
 </section>
 
@@ -529,10 +657,30 @@ Testar Limpeza
 
 <div id="formDemanda" style="display:none">
 
+ <label style="
+        display:block;
+        margin-bottom:8px;
+        font-weight:600;
+        font-size:15px;
+         margin-top: 12px;
+      ">
+        Descreva a demanda assistencial:
+        <span style="color:red">*</span>
+      </label>
   <textarea
-    id="descricaoDemanda"
-    placeholder="Descreva a demanda assistencial">
-  </textarea>
+        id="descricaoDemanda"
+        placeholder="Descreva aqui a demanda identificada pelo setor(ex: falta de equipamentos, quantitativo insuficiente, necessidede de novos recursos, etc)..."
+        style="
+          width:100%;
+          min-height:140px;
+          padding:15px;
+          border:1px solid #dbe2ea;
+          border-radius:12px;
+          font-size:15px;
+          resize:vertical;
+          box-sizing:border-box;
+        ">
+      </textarea>
 
   <button onclick="adicionarDemanda()">
     Adicionar
@@ -1091,7 +1239,7 @@ function mostrarDemanda(sim){
 
       listaDemandas.innerHTML = `
         <div class="card">
-          Durante a ronda setorial, não foram identificadas demandas assistenciais no setor avaliado.
+         Durante a ronda setorial, não foram identificadas demandas assistenciais relacionadas à falta de equipamentos, necessidade de substituição ou retirada de equipamentos, tampouco à inserção de novos recursos ou softwares. Também não foram observadas necessidades de treinamento ou reciclagem dos profissionais para utilização dos equipamentos disponíveis, nem foram relatadas outras demandas assistenciais.
         </div>
       `;
 
@@ -1286,7 +1434,7 @@ if(r.demandasAssistenciais &&
 
   h += `
     <div class="card">
-      Durante a realização da ronda setorial, não foram registradas demandas assistenciais relacionadas ao suporte técnico, orientação de usuários, treinamento, remanejamento de equipamentos ou demais solicitações direcionadas à Engenharia Clínica.
+      Durante a ronda setorial, não foram identificadas demandas assistenciais relacionadas à falta de equipamentos, necessidade de substituição ou retirada de equipamentos, tampouco à inserção de novos recursos ou softwares. Também não foram observadas necessidades de treinamento ou reciclagem dos profissionais para utilização dos equipamentos disponíveis, nem foram relatadas outras demandas assistenciais.
     </div>
   `;
 
@@ -2118,7 +2266,7 @@ if(
 ){
 
   addText(
-    "Durante a realização da ronda setorial, não foram registradas demandas assistenciais relacionadas ao suporte técnico, orientação de usuários, treinamento, remanejamento de equipamentos ou demais solicitações direcionadas à Engenharia Clínica."
+    "Durante a ronda setorial, não foram identificadas demandas assistenciais relacionadas à falta de equipamentos, necessidade de substituição ou retirada de equipamentos, tampouco à inserção de novos recursos ou softwares. Também não foram observadas necessidades de treinamento ou reciclagem dos profissionais para utilização dos equipamentos disponíveis, nem foram relatadas outras demandas assistenciais."
   );
 
 } else {
@@ -2501,6 +2649,30 @@ async function exportarLista(setores){
 
   mostrarToast("Todos os PDFs foram gerados");
 }
+
+fotoNC.addEventListener("change", function(){
+
+  const arquivo = this.files[0];
+
+  if(!arquivo) return;
+
+  const reader = new FileReader();
+
+  reader.onload = function(e){
+
+    previewFotoNC.src = e.target.result;
+
+    previewFotoNC.style.display = "block";
+
+    iconeCamera.style.display = "none";
+    textoFoto.style.display = "none";
+    textoObrigatorio.style.display = "none";
+
+  };
+
+  reader.readAsDataURL(arquivo);
+
+});
 
 </script>
 </body>
