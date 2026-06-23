@@ -558,32 +558,28 @@ Testar Limpeza
   <h2>Exportar Relatórios</h2>
 
   <div class="card">
-    <p><b>Selecione os setores para exportação:</b></p>
 
-    <label><input type="checkbox" class="chkSetor" value="UTI Adulto"> UTI Adulto</label><br>
-    <label><input type="checkbox" class="chkSetor" value="UTI Pediátrica"> UTI Pediátrica</label><br>
-    <label><input type="checkbox" class="chkSetor" value="Central de Material e Esterelização"> CME</label><br>
-    <label><input type="checkbox" class="chkSetor" value="Centro Cirúrgico"> Centro Cirúrgico</label><br>
-    <label><input type="checkbox" class="chkSetor" value="Apartamentos"> Apartamentos</label><br>
-    <label><input type="checkbox" class="chkSetor" value="Urgência"> Urgência</label><br>
-    <label><input type="checkbox" class="chkSetor" value="Radioterapia"> Radioterapia</label><br>
-    <label><input type="checkbox" class="chkSetor" value="Ambulatório"> Ambulatório</label><br>
+    <p><b>Selecione os setores:</b></p>
 
-  </div>
+    <label><input type="checkbox" value="UTI Adulto"> UTI Adulto</label><br>
+    <label><input type="checkbox" value="UTI Pediátrica"> UTI Pediátrica</label><br>
+    <label><input type="checkbox" value="Central de Material e Esterelização"> CME</label><br>
+    <label><input type="checkbox" value="Centro Cirúrgico"> Centro Cirúrgico</label><br>
+    <label><input type="checkbox" value="Apartamentos"> Apartamentos</label><br>
+    <label><input type="checkbox" value="Hematologia internação"> Hematologia internação</label><br>
+    <label><input type="checkbox" value="Agência Transfusional"> Agência Transfusional</label><br>
+    <label><input type="checkbox" value="Central de Enfermagem"> Central de Enfermagem</label><br>
+    <label><input type="checkbox" value="Transplante de Médula óssea"> Transplante</label><br>
+    <label><input type="checkbox" value="Pediatria internação"> Pediatria</label><br>
+    <label><input type="checkbox" value="Radioterapia"> Radioterapia</label><br>
+    <label><input type="checkbox" value="Centro de Diagnóstico por Imagem"> CDI</label><br>
+    <label><input type="checkbox" value="Urgência"> Urgência</label><br>
 
-  <div class="card">
-
-    <p><b>Tipo de exportação:</b></p>
-
-    <select id="tipoExportacao">
-      <option value="pdf">PDF</option>
-      <option value="print">Imprimir</option>
-    </select>
-
-    <button class="btn-finalizar" onclick="exportarRelatorio()">
-      <span class="material-icons">description</span>
-      Gerar Relatório
+    <button onclick="iniciarExportacao()" class="btn-finalizar">
+      Exportar PDFs
     </button>
+
+    <div id="statusExport" style="margin-top:15px;font-weight:bold;"></div>
 
   </div>
 
@@ -620,7 +616,7 @@ Testar Limpeza
 
 <nav id="menuInferiorHome" style="display:none;">
   
-  <button id="btnHome" onclick="trocarTela('telaSetores)">
+  <button id="btnHome" onclick="voltarInicio()">
     <span class="material-icons">home</span>
     <small>Início</small>
   </button>
@@ -1997,7 +1993,41 @@ window.addEventListener("resize", () => {
 });
 
 
+async function iniciarExportacao(){
 
+  const checkboxes = document.querySelectorAll("#telaExportar input[type=checkbox]");
+
+  const setores = [];
+
+  checkboxes.forEach(c => {
+    if(c.checked) setores.push(c.value);
+  });
+
+  if(setores.length === 0){
+    mostrarToast("Selecione pelo menos um setor");
+    return;
+  }
+
+  await exportarLista(setores);
+}
+
+async function exportarLista(setores){
+
+  const total = setores.length;
+
+  for(let i = 0; i < total; i++){
+
+    const setor = setores[i];
+
+    document.getElementById("statusExport").innerText =
+      `Exportando ${i + 1} de ${total} - ${setor}`;
+
+    await gerarPDF(setor);
+  }
+
+  document.getElementById("statusExport").innerText =
+    "Exportação concluída!";
+}
 
 
 </script>
