@@ -240,6 +240,8 @@ header h1{
     border-radius:0 !important;
 }
 
+
+
 #menuInferior button.ativo .material-icons,
 #menuInferior button.ativo small{
     color:#1565c0;
@@ -336,6 +338,75 @@ header h1{
     font-size:20px;
 }
 
+
+#menuInferiorHome{
+    position:fixed;
+    bottom:0;
+    left:0;
+    width:100%;
+    height:70px;
+
+    background:#fff;
+
+    display:flex;
+    justify-content:space-around;
+    align-items:center;
+
+    border-top:1px solid #ddd;
+
+    box-shadow:0 -2px 8px rgba(0,0,0,.08);
+
+    z-index:9999;
+
+    border-radius:0 !important;
+}
+
+#menuInferiorHome button{
+    flex:1;
+    height:100%;
+
+    background:none;
+    border:none;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+
+    color:#757575;
+
+    margin:0;
+    padding:0;
+
+    border-top:8px solid transparent;
+
+    transition:.2s;
+
+    border-radius:0 !important;
+}
+
+#menuInferiorHome .material-icons{
+    font-size:24px;
+}
+
+#menuInferiorHome small{
+    font-size:11px;
+    margin-top:2px;
+    font-weight:600;
+}
+
+/* ITEM SELECIONADO */
+#menuInferiorHome button.ativo{
+    border-top:5px solid #1565c0;
+    border-radius:0 !important;
+}
+
+#menuInferiorHome button.ativo .material-icons,
+#menuInferiorHome button.ativo small{
+    color:#1565c0;
+}
+
+
 </style>
 </head>
 <body>
@@ -417,7 +488,7 @@ Testar Limpeza
 
   <div class="cabecalho-alerta">
     <span class="material-icons icone-brasao">verified</span>
-    <span class="titulo-alerta">Antes de finalizar a ronda</span>
+    <span class="titulo-alerta">Atenção</span>
   </div>
 
 
@@ -478,8 +549,44 @@ Testar Limpeza
 <h3>Técnico</h3><canvas id="c1"></canvas><button onclick="assinar('tecnico')">Assinar</button><button onclick="limparCanvas('c1')">Limpar assinatura técnico</button>
 <h3>Coordenador Setor</h3><canvas id="c2"></canvas><button onclick="assinar('setor')">Assinar</button><button onclick="limparCanvas('c2')">Limpar assinatura setor</button>
 <h3>Coordenação Engenharia</h3><canvas id="c3"></canvas><button onclick="assinar('engenharia')">Assinar</button><button onclick="limparCanvas('c3')">Limpar assinatura engenharia</button>
-<button class="proximo" onclick="abrirResumo()">Voltar</button>
+
 <div id="statusRonda">PENDENTE</div>
+</section>
+
+<section id="telaExportar" class="tela">
+
+  <h2>Exportar Relatórios</h2>
+
+  <div class="card">
+    <p><b>Selecione os setores para exportação:</b></p>
+
+    <label><input type="checkbox" class="chkSetor" value="UTI Adulto"> UTI Adulto</label><br>
+    <label><input type="checkbox" class="chkSetor" value="UTI Pediátrica"> UTI Pediátrica</label><br>
+    <label><input type="checkbox" class="chkSetor" value="Central de Material e Esterelização"> CME</label><br>
+    <label><input type="checkbox" class="chkSetor" value="Centro Cirúrgico"> Centro Cirúrgico</label><br>
+    <label><input type="checkbox" class="chkSetor" value="Apartamentos"> Apartamentos</label><br>
+    <label><input type="checkbox" class="chkSetor" value="Urgência"> Urgência</label><br>
+    <label><input type="checkbox" class="chkSetor" value="Radioterapia"> Radioterapia</label><br>
+    <label><input type="checkbox" class="chkSetor" value="Ambulatório"> Ambulatório</label><br>
+
+  </div>
+
+  <div class="card">
+
+    <p><b>Tipo de exportação:</b></p>
+
+    <select id="tipoExportacao">
+      <option value="pdf">PDF</option>
+      <option value="print">Imprimir</option>
+    </select>
+
+    <button class="btn-finalizar" onclick="exportarRelatorio()">
+      <span class="material-icons">description</span>
+      Gerar Relatório
+    </button>
+
+  </div>
+
 </section>
 
 <div id="toast" class="toast"></div>
@@ -510,6 +617,19 @@ Testar Limpeza
   </button>
 
 </nav>
+
+<nav id="menuInferiorHome" style="display:none;">
+  
+  <button id="btnHome" onclick="trocarTela('telaSetores)">
+    <span class="material-icons">home</span>
+    <small>Início</small>
+  </button>
+
+  <button id="btnExport" onclick="trocarTela('telaExportar')">
+    <span class="material-icons">description</span>
+    <small>Relatório</small>
+  </button>
+</nav>
   
 
 <script>
@@ -538,11 +658,48 @@ function trocarTela(id){
     el.innerText = setorAtual || "";
   });
 
-  const menu = document.getElementById("menuInferior");
+  // =========================
+  // MENUS
+  // =========================
 
+  const menu = document.getElementById("menuInferior");
+  const menuHome = document.getElementById("menuInferiorHome");
+
+  // MENU PRINCIPAL (Equipamentos, NC, Resumo, Assinaturas)
   if(menu){
-    menu.style.display = (id === "telaSetores") ? "none" : "flex";
+    menu.style.display =
+      (id === "telaSetores" || id === "telaExportar")
+        ? "none"
+        : "flex";
   }
+
+  // MENU HOME (Setores + Exportar)
+  if(menuHome){
+    menuHome.style.display =
+      (id === "telaSetores" || id === "telaExportar")
+        ? "flex"
+        : "none";
+  }
+
+  // =========================
+  // LIMPA ATIVO DO MENU HOME
+  // =========================
+  document.querySelectorAll("#menuInferiorHome button")
+    .forEach(btn => btn.classList.remove("ativo"));
+
+  // ativa botão HOME
+  if(id === "telaSetores"){
+    document.getElementById("btnHome")?.classList.add("ativo");
+  }
+
+  // ativa botão EXPORTAR
+  if(id === "telaExportar"){
+    document.getElementById("btnExport")?.classList.add("ativo");
+  }
+
+  // =========================
+  // BOTÕES ATIVOS MENU PRINCIPAL
+  // =========================
 
   document.querySelectorAll("#menuInferior button")
     .forEach(btn => btn.classList.remove("ativo"));
