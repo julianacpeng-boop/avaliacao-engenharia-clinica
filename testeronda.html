@@ -11,7 +11,22 @@
 <title>Ronda Hospitalar</title>
 <style>
 body{margin:0;font-family:Arial,sans-serif;background:#f4f7fb}
-header{background:#0d47a1;color:#fff;padding:15px;text-align:center}
+
+header{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+
+  background:#0d47a1;
+  color:#fff;
+  padding:15px;
+  text-align:center;
+
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
 .header-container{
     display:flex;
     align-items:center;
@@ -435,13 +450,55 @@ header h1{
 }
 
 
+
+.btn {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  margin: 6px 6px 10px 0;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center; /* centraliza horizontalmente */
+  gap: 6px;
+  text-align: center;
+}
+
+.btn-assinar {
+  background: #1e88e5;
+  color: white;
+}
+
+.btn-assinar:hover {
+  background: #1565c0;
+}
+
+.btn-limpar {
+  background: #e53935;
+  color: white;
+}
+
+.btn-limpar:hover {
+  background: #c62828;
+}
+
+.btn i {
+  font-size: 18px;
+  line-height: 1;
+}
+
+
+
 </style>
 </head>
 <body>
 <header>
   <div class="header-container">
     <button class="menu-btn" onclick="voltarInicio()">☰</button>
-    <h1>Ronda Hospitalar</h1>
+    <h1>Ronda Setorial</h1>
   </div>
 </header>
 
@@ -760,11 +817,45 @@ Testar Limpeza
  
 <button onclick="salvarResponsavelSetor()">Salvar responsável do setor</button>
 
-<h3>Técnico</h3><canvas id="c1"></canvas><button onclick="assinar('tecnico')">Assinar</button><button onclick="limparCanvas('c1')">Limpar assinatura técnico</button>
-<h3>Coordenador Setor</h3><canvas id="c2"></canvas><button onclick="assinar('setor')">Assinar</button><button onclick="limparCanvas('c2')">Limpar assinatura setor</button>
-<h3>Coordenação Engenharia</h3><canvas id="c3"></canvas><button onclick="assinar('engenharia')">Assinar</button><button onclick="limparCanvas('c3')">Limpar assinatura engenharia</button>
+<h3>Técnico</h3><canvas id="c1"></canvas>
+<button class="btn btn-assinar" onclick="assinar('tecnico')">
+   <i class="material-icons">draw</i>
+  Assinar
+</button>
 
-<div id="statusRonda">PENDENTE</div>
+<button class="btn btn-limpar" onclick="limparCanvas('c1')">
+  <i class="material-icons">delete</i>
+  Limpar assinatura
+</button>
+<h3>Coordenador Setor</h3><canvas id="c2"></canvas>
+
+<button class="btn btn-assinar" onclick="assinar('setor')">
+   <i class="material-icons">draw</i>
+  Assinar
+</button>
+
+<button class="btn btn-limpar" onclick="limparCanvas('c2')">
+  <i class="material-icons">delete</i>
+  Limpar assinatura
+</button>
+
+<h3>Coordenação Engenharia</h3><canvas id="c3"></canvas>
+<button class="btn btn-assinar" onclick="assinar('engenharia')">
+   <i class="material-icons">draw</i>
+  Assinar
+</button>
+
+<button class="btn btn-limpar" onclick="limparCanvas('c3')">
+  <i class="material-icons">delete</i>
+  Limpar assinatura
+</button>
+<!--
+  <div id="statusRonda">PENDENTE</div>
+  -->
+
+
+
+
 </section>
 
 <section id="telaExportar" class="tela">
