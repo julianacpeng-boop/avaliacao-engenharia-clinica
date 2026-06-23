@@ -406,6 +406,33 @@ header h1{
     color:#1565c0;
 }
 
+.barra-exportacao{
+  width:100%;
+  height:22px;
+  background:#e0e0e0;
+  border-radius:20px;
+  overflow:hidden;
+  margin-top:15px;
+}
+
+#progressoExportacao{
+  width:0%;
+  height:100%;
+  background:#1565c0;
+  transition:.3s;
+}
+
+#arquivoAtual{
+  font-weight:bold;
+  margin-bottom:10px;
+}
+
+#statusExportacao{
+  text-align:center;
+  margin-top:8px;
+  font-weight:bold;
+}
+
 
 </style>
 </head>
@@ -555,33 +582,167 @@ Testar Limpeza
 
 <section id="telaExportar" class="tela">
 
-  <h2>Exportar Relatórios</h2>
+<h2>Exportar relatório</h2>
 
-  <div class="card">
+<p style="
+color:#666;
+font-size:16px;
+line-height:1.5;
+margin-bottom:20px;
+">
+Selecione os setores para gerar e exportar os relatórios da ronda hospitalar.
+</p>
 
-    <p><b>Selecione os setores:</b></p>
+<div class="card">
 
-    <label><input type="checkbox" value="UTI Adulto"> UTI Adulto</label><br>
-    <label><input type="checkbox" value="UTI Pediátrica"> UTI Pediátrica</label><br>
-    <label><input type="checkbox" value="Central de Material e Esterelização"> CME</label><br>
-    <label><input type="checkbox" value="Centro Cirúrgico"> Centro Cirúrgico</label><br>
-    <label><input type="checkbox" value="Apartamentos"> Apartamentos</label><br>
-    <label><input type="checkbox" value="Hematologia internação"> Hematologia internação</label><br>
-    <label><input type="checkbox" value="Agência Transfusional"> Agência Transfusional</label><br>
-    <label><input type="checkbox" value="Central de Enfermagem"> Central de Enfermagem</label><br>
-    <label><input type="checkbox" value="Transplante de Médula óssea"> Transplante</label><br>
-    <label><input type="checkbox" value="Pediatria internação"> Pediatria</label><br>
-    <label><input type="checkbox" value="Radioterapia"> Radioterapia</label><br>
-    <label><input type="checkbox" value="Centro de Diagnóstico por Imagem"> CDI</label><br>
-    <label><input type="checkbox" value="Urgência"> Urgência</label><br>
+  <div style="
+  display:flex;
+  align-items:center;
+  gap:15px;
+  margin-bottom:15px;
+  ">
 
-    <button onclick="iniciarExportacao()" class="btn-finalizar">
-      Exportar PDFs
-    </button>
+    <span class="material-icons"
+    style="
+    font-size:48px;
+    color:#1565c0;
+    ">
+      domain
+    </span>
 
-    <div id="statusExport" style="margin-top:15px;font-weight:bold;"></div>
+    <div>
+      <div style="font-size:24px;font-weight:bold">
+        Selecione os setores
+      </div>
+
+      <div style="color:#666">
+        Marque um ou mais setores abaixo.
+      </div>
+    </div>
 
   </div>
+
+  <select id="setoresExportar" 
+  multiple
+  style="
+  width:100%;
+  height:250px;
+  border:1px solid #ddd;
+  border-radius:12px;
+  padding:10px;
+  font-size:16px;
+  ">
+
+    <option value="UTI Adulto">UTI Adulto</option>
+      <option value="UTI Pediátrica">UTI Pediátrica</option>
+      <option value="Central de Material e Esterelização">Central de Material e Esterelização</option>
+      <option value="Centro Cirúrgico">Centro Cirúrgico</option>
+      <option value="Apartamentos">Apartamentos</option>
+      <option value="Hematologia internação">Hematologia internação</option>
+      <option value="Agência Transfusional">Agência Transfusional</option>
+      <option value="Central de Enfermagem">Central de Enfermagem</option>
+      <option value="Transplante de Médula óssea">Transplante de Médula óssea</option>
+      <option value="Pediatria internação">Pediatria internação</option>
+      <option value="Radioterapia">Radioterapia</option>
+      <option value="Centro de Diagnóstico por Imagem">Centro de Diagnóstico por Imagem</option>
+      <option value="Pediatria térreo">Pediatria térreo</option>
+      <option value="Urgência">Urgência</option>
+      <option value="Hematologia Térreo">Hematologia Térreo</option>
+      <option value="Fisioterapia">Fisioterapia</option>
+      <option value="Ambulatório">Ambulatório</option>
+      <option value="Quimioterapia Adulto">Quimioterapia Adulto</option>
+
+  </select>
+
+</div>
+
+
+<div class="card">
+
+  <div style="
+  display:flex;
+  align-items:center;
+  gap:15px;
+  margin-bottom:20px;
+  ">
+
+    <span class="material-icons"
+    style="
+    font-size:50px;
+    color:#1565c0;
+    ">
+      picture_as_pdf
+    </span>
+
+    <div>
+
+      <div style="
+      font-size:24px;
+      font-weight:bold;
+      ">
+        Exportando relatório
+      </div>
+
+      <div style="color:#666">
+        Aguarde, os arquivos estão sendo gerados.
+      </div>
+
+      <div id="arquivoAtual"
+      style="
+      margin-top:10px;
+      color:#1565c0;
+      font-weight:bold;
+      font-size:20px;
+      ">
+        Nenhum arquivo
+      </div>
+
+    </div>
+
+  </div>
+
+  <div id="statusExportacao"
+  style="
+  font-size:20px;
+  margin-bottom:10px;
+  ">
+    0 de 0
+  </div>
+
+  <div style="
+  width:100%;
+  height:18px;
+  background:#e5e7eb;
+  border-radius:30px;
+  overflow:hidden;
+  ">
+
+    <div id="progressoExportacao"
+    style="
+    width:0%;
+    height:100%;
+    background:#1565c0;
+    transition:.3s;
+    ">
+    </div>
+
+  </div>
+
+  <div style="
+  margin-top:20px;
+  background:#eef5ff;
+  padding:15px;
+  border-radius:12px;
+  color:#1565c0;
+  ">
+    Não feche o aplicativo enquanto os relatórios estão sendo gerados.
+  </div>
+
+</div>
+
+ <button class="btn-finalizar" onclick="iniciarExportacao()">
+      Exportar PDFs
+    </button>
 
 </section>
 
@@ -844,7 +1005,7 @@ if(rondas[setorAtual].finalizado) return;
 }
 function renderNC(){
 
-  let r = rondas[setor];
+  let r = rondas[setorAtual];
 
   listaNC.innerHTML = r.naoConformidades.map((n, index) => `
     <div class="card">
@@ -868,7 +1029,7 @@ function renderNC(){
   `).join('');
 }
 
-function abrirResumo(){
+function abrirResumo(mostrarTela = true){
 
   let r = rondas[setorAtual];
 
@@ -990,7 +1151,10 @@ h += `
 `;
 
   resumoCompleto.innerHTML = `<div class="resumo-texto">${h}</div>`;
-  trocarTela('telaResumo');
+  
+    if(mostrarTela){
+    trocarTela('telaResumo');
+  }
 }
 
 function assinar(tipo){
@@ -1995,13 +2159,11 @@ window.addEventListener("resize", () => {
 
 async function iniciarExportacao(){
 
-  const checkboxes = document.querySelectorAll("#telaExportar input[type=checkbox]");
+  const select =
+    document.getElementById("setoresExportar");
 
-  const setores = [];
-
-  checkboxes.forEach(c => {
-    if(c.checked) setores.push(c.value);
-  });
+  const setores =
+    [...select.selectedOptions].map(o => o.value);
 
   if(setores.length === 0){
     mostrarToast("Selecione pelo menos um setor");
@@ -2017,18 +2179,31 @@ async function exportarLista(setores){
 
   for(let i = 0; i < total; i++){
 
-    const setor = setores[i];
+    setorAtual = setores[i];
 
-    document.getElementById("statusExport").innerText =
-      `Exportando ${i + 1} de ${total} - ${setor}`;
+    document.getElementById("arquivoAtual").innerText =
+      "Gerando: " + setorAtual + ".pdf";
 
-    await gerarPDF(setor);
+    const percentual =
+      Math.round(((i + 1) / total) * 100);
+
+    document.getElementById("progressoExportacao")
+      .style.width = percentual + "%";
+
+    document.getElementById("statusExportacao")
+      .innerText =
+      `${i + 1} de ${total} (${percentual}%)`;
+
+    abrirResumo(false);
+
+    await gerarPDF();
   }
 
-  document.getElementById("statusExport").innerText =
-    "Exportação concluída!";
-}
+  document.getElementById("arquivoAtual").innerText =
+    "Exportação concluída";
 
+  mostrarToast("Todos os PDFs foram gerados");
+}
 
 </script>
 </body>
