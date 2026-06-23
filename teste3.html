@@ -1867,6 +1867,10 @@ function marcarMenuAtivo(id){
       .classList.add("ativo");
 }
 
+if (typeof cordova === "undefined") {
+  console.log("Rodando no navegador (sem Cordova)");
+}
+
 </script>
 </body>
 </html>
