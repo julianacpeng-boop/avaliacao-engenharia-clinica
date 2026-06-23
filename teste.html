@@ -1,32 +1,1860 @@
-function doPost(e) {
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-  if (!e || !e.postData || !e.postData.contents) {
-    return ContentService
-      .createTextOutput("Erro: requisição inválida");
+<title>Ronda Hospitalar</title>
+<style>
+body{margin:0;font-family:Arial,sans-serif;background:#f4f7fb}
+header{background:#0d47a1;color:#fff;padding:15px;text-align:center}
+.header-container{
+    display:flex;
+    align-items:center;
+    justify-content:flex-start;
+    gap:15px;
+}
+.tela{
+    display:none;
+    padding:15px;
+    padding-bottom:100px;
+}
+.ativa{display:block}
+.card{background:#fff;padding:15px;margin:10px 0;border-radius:12px;box-shadow:0 2px 6px rgba(0,0,0,.1)}
+.setor{cursor:pointer}
+input,textarea{width:100%;padding:12px;margin-top:10px;box-sizing:border-box;border:1px solid #ccc;border-radius:8px}
+button:not(.menu-btn){
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  border:none;
+  border-radius:8px;
+  font-weight:bold;
+  cursor:pointer;
+}
+.sim{background:#4caf50;color:white}
+.nao{background:#9e9e9e;color:white}
+.proximo,.finalizar{background:#1565c0;color:white}
+.assinatura{
+  background:#1565c0;
+  color:white;
+}
+canvas{
+  width:100%;
+  height:150px;
+  border:1px solid #000;
+  background:#fff;
+  touch-action:none;
+}
+#statusRonda{margin-top:20px;padding:20px;text-align:center;font-weight:bold;background:#ff9800;color:#fff;border-radius:10px}
+.card{
+  text-align: justify;
+}
+
+.toast{
+  position: fixed;
+  bottom: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #2e7d32; /* verde */
+  color: white;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-weight: bold;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  opacity: 0;
+  transition: 0.3s;
+   z-index: 10000;
+  
+}
+
+.toast.show{
+  opacity: 1;
+}
+
+
+
+.resumo-texto{
+  text-align: justify;
+  line-height: 1.5;
+}
+
+header{
+    background:#0d47a1;
+    color:#fff;
+    padding:15px;
+}
+
+.header-container{
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+.menu-btn{
+    width:45px !important;
+    min-width:45px !important;
+    max-width:45px !important;
+    height:45px !important;
+
+    flex:none;
+
+    margin:0;
+    padding:0;
+
+    border:none;
+    border-radius:8px;
+
+    background:rgba(255,255,255,0.15);
+    color:#fff;
+    font-size:24px;
+    cursor:pointer;
+}
+
+.menu-btn:hover{
+    background:rgba(255,255,255,0.25);
+}
+
+header h1{
+    margin:0;
+    flex:1;
+    text-align:center;
+}
+
+@media print {
+
+  body {
+    background: #fff !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 
-  var sheet = SpreadsheetApp
-    .getActiveSpreadsheet()
-    .getSheetByName("Avaliações");
+  /* esconde tudo que não é relatório */
+  header,
+  .menu-btn,
+  button,
+  #telaSetores,
+  #telaEquipamentos,
+  #telaNC,
+  #telaAssinaturas {
+    display: none !important;
+  }
 
-  var data = JSON.parse(e.postData.contents);
+  /* deixa só o resumo aparecer */
+  #telaResumo {
+    display: block !important;
+  }
 
-  sheet.appendRow([
-    data.chamado,
-    data.tecnico,
-    data.data,
-    data.hora,
-    data.nota,
-    data.comentario,
-    new Date()
-  ]);
+  /* evita corte de cards */
+  .card {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    margin-bottom: 15px;
+  }
 
-  return ContentService.createTextOutput("OK");
+  /* melhora leitura */
+  body {
+    font-size: 12pt;
+  }
+
+  h2, h3 {
+    color: #000;
+  }
+
+  /* imagens das assinaturas não cortarem */
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+    page-break-inside: avoid;
+  }
+
+  /* evita cortar no meio da página */
+  div {
+    page-break-inside: avoid;
+  }
 }
-function doGet(e) {
-  const template = HtmlService.createTemplateFromFile('index');
 
-  return template.evaluate()
-    .setTitle("Avaliação de Chamado")
-    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+#menuInferior{
+    position:fixed;
+    bottom:0;
+    left:0;
+    width:100%;
+    height:70px;
+
+    background:#fff;
+
+    display:flex;
+    justify-content:space-around;
+    align-items:center;
+
+    border-top:1px solid #ddd;
+
+    box-shadow:0 -2px 8px rgba(0,0,0,.08);
+
+    z-index:9999;
+
+    border-radius:0 !important;
 }
+
+#menuInferior button{
+    flex:1;
+    height:100%;
+
+    background:none;
+    border:none;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+
+    color:#757575;
+
+    margin:0;
+    padding:0;
+
+    border-top:8px solid transparent;
+
+    transition:.2s;
+
+    border-radius:0 !important;
+}
+
+#menuInferior .material-icons{
+    font-size:24px;
+}
+
+#menuInferior small{
+    font-size:11px;
+    margin-top:2px;
+    font-weight:600;
+}
+
+/* ITEM SELECIONADO */
+#menuInferior button.ativo{
+    border-top:5px solid #1565c0;
+    border-radius:0 !important;
+}
+
+#menuInferior button.ativo .material-icons,
+#menuInferior button.ativo small{
+    color:#1565c0;
+}
+
+
+.alerta-final-ronda{
+    background:#fff;
+    padding:15px;
+    border-radius:12px;
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
+    margin-top:15px;
+}
+
+/* CABEÇALHO */
+.cabecalho-alerta{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:12px;
+    justify-content: center;
+  
+}
+
+.icone-brasao{
+    color:#1565c0;
+    font-size:28px;
+}
+
+.titulo-alerta{
+    font-weight:700;
+    font-size:16px;
+}
+
+/* CAIXAS */
+.caixa{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    padding:12px;
+    border-radius:10px;
+    margin-bottom:10px;
+    font-size:14px;
+    line-height:1.4;
+}
+
+.caixa .texto{
+    flex:1;
+}
+
+/* ÍCONES */
+.icone{
+    font-size:26px;
+}
+
+/* AZUL BEBÊ */
+.caixa.azul{
+    background:#eaf3ff;
+    border:1px solid #d6e9ff;
+}
+
+.circulo-azul{
+    color:#1565c0;
+}
+
+/* LARANJA BEBÊ */
+.caixa.laranja{
+    background:#fff4e5;
+    border:1px solid #ffe0b3;
+}
+
+.triangulo-laranja{
+    color:#ef6c00;
+}
+
+/* BOTÃO FINALIZAR (AZUL) */
+.btn-finalizar{
+    width:100%;
+    margin-top:12px;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    background:#1565c0;
+    color:#fff;
+    font-weight:700;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    cursor:pointer;
+}
+
+.btn-finalizar .material-icons{
+    font-size:20px;
+}
+
+</style>
+</head>
+<body>
+<header>
+  <div class="header-container">
+    <button class="menu-btn" onclick="voltarInicio()">☰</button>
+    <h1>Ronda Hospitalar</h1>
+  </div>
+</header>
+
+<section id="telaSetores" class="tela ativa">
+<h2>Selecione o Setor</h2>
+<div class="card setor" onclick="selecionarSetor('UTI Adulto')">UTI Adulto</div>
+<div class="card setor" onclick="selecionarSetor('UTI Pediátrica')">UTI Pediátrica</div>
+<div class="card setor" onclick="selecionarSetor('Central de Material e Esterelização')">Central de Material e Esterelização</div>
+<div class="card setor" onclick="selecionarSetor('Centro Cirúrgico')">Centro Cirúrgico</div>
+<div class="card setor" onclick="selecionarSetor('Apartamentos')">Apartamentos</div>
+<div class="card setor" onclick="selecionarSetor('Hematologia internação')">Hematologia internação</div>
+<div class="card setor" onclick="selecionarSetor('Agência Transfusional')">Agência Transfusional</div>
+<div class="card setor" onclick="selecionarSetor('Central de Enfermagem')">Central de Enfermagem</div>
+<div class="card setor" onclick="selecionarSetor('Transplante de Médula óssea')">Transplante de Médula óssea</div>
+<div class="card setor" onclick="selecionarSetor('Pediatria internação')">Pediatria internação</div>
+<div class="card setor" onclick="selecionarSetor('Radioterapia')">Radioterapia</div>
+<div class="card setor" onclick="selecionarSetor('Centro de Diagnóstico por Imagem')">Centro de Diagnóstico por Imagem</div>
+<div class="card setor" onclick="selecionarSetor('Pediatria térreo')">Pediatria térreo</div>
+<div class="card setor" onclick="selecionarSetor('Urgência')">Urgência</div>
+<div class="card setor" onclick="selecionarSetor('Hematologia Térreo')">Hematologia Térreo</div>
+<div class="card setor" onclick="selecionarSetor('Fisioterapia')">Fisioterapia</div>
+<div class="card setor" onclick="selecionarSetor('Ambulatório')">Ambulatório</div>
+<div class="card setor" onclick="selecionarSetor('Quimioterapia Adulto')">Quimioterapia Adulto</div>
+<!--
+<button onclick="forcarNovoDia()">
+Testar Limpeza
+</button>
+-->
+</section>
+
+<section id="telaEquipamentos" class="tela">
+<h2>Equipamentos</h2>
+ <div class="info-setor">
+  <b>Setor:</b> <span class="setorAtualTexto"></span>
+</div>
+
+<p>Existe equipamento para reparo?</p>
+<button class="sim" onclick="mostrarEquipamentos(true)">SIM</button>
+<button class="nao" onclick="mostrarEquipamentos(false)">NÃO</button>
+<div id="formEquipamento" style="display:none">
+<input id="nomeEquip" placeholder="Nome">
+<input id="patrimonioEquip" placeholder="Patrimônio">
+<input id="serieEquip" placeholder="Série">
+<input id="falhaEquip" placeholder="Falha">
+<button onclick="adicionarEquipamento()">Adicionar</button>
+</div>
+<div id="listaEquipamentos"></div>
+</section>
+
+<section id="telaNC" class="tela">
+<h2>Não Conformidades</h2>
+ <div class="info-setor">
+  <b>Setor:</b> <span class="setorAtualTexto"></span>
+</div>
+<p>Existe não conformidade?</p>
+<button class="sim" onclick="mostrarNC(true)">SIM</button>
+<button class="nao" onclick="mostrarNC(false)">NÃO</button>
+<div id="formNC" style="display:none">
+<input type="file" id="fotoNC" accept="image/*">
+<textarea id="descricaoNC" placeholder="Descrição"></textarea>
+<button onclick="adicionarNC()">Adicionar</button>
+</div>
+<div id="listaNC"></div>
+
+</section>
+
+<section id="telaResumo" class="tela">
+<h2>Resumo</h2>
+<div id="resumoCompleto"></div>
+
+<div class="alerta-final-ronda">
+
+  <div class="cabecalho-alerta">
+    <span class="material-icons icone-brasao">verified</span>
+    <span class="titulo-alerta">Antes de finalizar a ronda</span>
+  </div>
+
+
+  <!-- CAIXA AZUL -->
+<div class="caixa azul">
+  <span class="material-icons icone circulo-azul">info</span>
+
+  <div class="texto" style="text-align: justify; line-height: 1.5;">
+    Antes de finalizar a ronda, certifique-se de que o documento foi assinado pelo
+    <b>técnico</b> e pelo responsável pelo setor (<b>responsável pelo setor</b>).
+  </div>
+</div>
+
+<!-- CAIXA LARANJA -->
+<div class="caixa laranja">
+  <span class="material-icons icone triangulo-laranja">warning</span>
+
+  <div class="texto" style="text-align: justify; line-height: 1.5;">
+    Após a finalização, <b>não será mais possível</b> adicionar ou alterar assinaturas.
+  </div>
+</div>
+
+  <!-- BOTÃO FINALIZAR -->
+  <button class="btn-finalizar" onclick="finalizarRonda()">
+    <span class="material-icons">check_circle</span>
+    Finalizar Ronda
+  </button>
+
+</div>
+
+<button onclick="gerarPDF()" style="background:#2e7d32;color:white">
+  Exportar PDF / Imprimir
+</button>
+</section>
+
+<section id="telaAssinaturas" class="tela">
+<h2>Assinaturas</h2>
+<div class="card">
+  <h3>Assinantes da Ronda</h3>
+
+  <b>Técnico</b>
+  <p>Diego - Técnico em Equipamentos Biomédicos</p>
+
+  <b>Coordenação Engenharia</b>
+  <p>Juliana Coelho - Coordenadora de Engenharia Clínica</p>
+
+ <div class="info-setor">
+  <b>Responsável do Setor:</b>
+  <span id="respSetorTexto"></span>
+  <span class="setorAtualTexto"></span>
+</div>
+
+  <input id="nomeSetor" placeholder="Nome">
+  <input id="funcSetor" placeholder="Função">
+ 
+<button onclick="salvarResponsavelSetor()">Salvar responsável do setor</button>
+
+<h3>Técnico</h3><canvas id="c1"></canvas><button onclick="assinar('tecnico')">Assinar</button><button onclick="limparCanvas('c1')">Limpar assinatura técnico</button>
+<h3>Coordenador Setor</h3><canvas id="c2"></canvas><button onclick="assinar('setor')">Assinar</button><button onclick="limparCanvas('c2')">Limpar assinatura setor</button>
+<h3>Coordenação Engenharia</h3><canvas id="c3"></canvas><button onclick="assinar('engenharia')">Assinar</button><button onclick="limparCanvas('c3')">Limpar assinatura engenharia</button>
+<button class="proximo" onclick="abrirResumo()">Voltar</button>
+<div id="statusRonda">PENDENTE</div>
+</section>
+
+<div id="toast" class="toast"></div>
+
+
+
+
+  <nav id="menuInferior" style="display:none;">
+
+  <button id="btnEquip" onclick="trocarTela('telaEquipamentos')">
+    <span class="material-icons">medical_services</span>
+    <small>Equipamentos</small>
+  </button>
+
+  <button id="btnNC" onclick="trocarTela('telaNC')">
+    <span class="material-icons">warning</span>
+    <small>Não Conform.</small>
+  </button>
+
+  <button id="btnResumo" onclick="abrirResumo()">
+    <span class="material-icons">description</span>
+    <small>Resumo</small>
+  </button>
+
+  <button id="btnAssinatura" onclick="trocarTela('telaAssinaturas')">
+    <span class="material-icons">draw</span>
+    <small>Assinaturas</small>
+  </button>
+
+</nav>
+  
+
+<script>
+
+const logoHospital = "data:image/png;base64,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";
+
+let setorAtual = "";
+let rondas = {};
+
+function trocarTela(id){
+
+  document.querySelectorAll('.tela')
+    .forEach(t => t.classList.remove('ativa'));
+
+  const tela = document.getElementById(id);
+
+  if(tela){
+    tela.classList.add('ativa');
+  } else {
+    console.warn("Tela não encontrada:", id);
+  }
+
+  const elementos = document.querySelectorAll(".setorAtualTexto");
+
+  elementos.forEach(el => {
+    el.innerText = setorAtual || "";
+  });
+
+  const menu = document.getElementById("menuInferior");
+
+  if(menu){
+    menu.style.display = (id === "telaSetores") ? "none" : "flex";
+  }
+
+  document.querySelectorAll("#menuInferior button")
+    .forEach(btn => btn.classList.remove("ativo"));
+
+  const mapa = {
+    telaEquipamentos: "btnEquip",
+    telaNC: "btnNC",
+    telaResumo: "btnResumo",
+    telaAssinaturas: "btnAssinatura"
+  };
+
+  const btnId = mapa[id];
+
+  if(btnId){
+    const btn = document.getElementById(btnId);
+    if(btn) btn.classList.add("ativo");
+  }
+}
+
+function selecionarSetor(s){
+
+  setorAtual = s;
+
+  if(!rondas[setorAtual]){
+    rondas[setorAtual] = {
+      inicio: new Date().toLocaleString(),
+       final: null,
+      finalizado: false,
+      equipamentos: [],
+      naoConformidades: [],
+      assinaturas:{
+  tecnico:"",
+  setor:"",
+  engenharia:""
+}
+    };
+  }
+
+  if(rondas[setorAtual].finalizado){
+    document.querySelector("#formEquipamento button").disabled = true;
+    document.querySelector("#formNC button").disabled = true;
+}else{
+    document.querySelector("#formEquipamento button").disabled = false;
+    document.querySelector("#formNC button").disabled = false;
+}
+
+  salvar();
+  atualizarSetores(); // 🔥 também aqui
+
+  // LIMPA TELAS (EVITA “mistura visual”)
+  listaEquipamentos.innerHTML = "";
+  listaNC.innerHTML = "";
+
+  trocarTela('telaEquipamentos');
+}
+
+function mostrarEquipamentos(sim){document.getElementById('formEquipamento').style.display=sim?'block':'none';if(!sim)listaEquipamentos.innerHTML='<div class="card">Durante a realização da ronda setorial, não foram identificados equipamentos com necessidade de reparo ou recolhimento pelo setor de Engenharia Clínica. Da mesma forma, não foi relatada pela equipe do setor qualquer necessidade de intervenção nos equipamentos médico-hospitalares no momento da inspeção.</div>';}
+
+function adicionarEquipamento(){
+
+  if(rondas[setorAtual].finalizado) return;
+
+  rondas[setorAtual].equipamentos.push({
+    nome: nomeEquip.value,
+    patrimonio: patrimonioEquip.value,
+    serie: serieEquip.value,
+    falha: falhaEquip.value
+  });
+
+  renderEquip();
+  salvar();
+  limparEquipamento();
+}
+
+function renderEquip(){
+
+  let r = rondas[setorAtual];
+
+  listaEquipamentos.innerHTML =
+    r.equipamentos.map((e, index) => `
+      <div class="card">
+        <b>${e.nome}</b><br>
+        ${e.patrimonio}<br>
+        ${e.serie}<br>
+        ${e.falha}<br><br>
+
+        <button onclick="editarEquip(${index})"
+          style="width:auto;background:#ffb300;color:#fff;margin-right:5px;">
+          ✏️ Editar
+        </button>
+
+        <button onclick="excluirEquip(${index})"
+          style="width:auto;background:#e53935;color:#fff;">
+          🗑️ Excluir
+        </button>
+
+      </div>
+    `).join('');
+}
+
+function mostrarNC(sim){
+
+  document.getElementById('formNC').style.display = sim ? 'block' : 'none';
+
+  let r = rondas[setorAtual];
+
+  if(!sim){
+
+    r.naoConformidades = r.naoConformidades || [];
+
+    if(r.naoConformidades.length === 0){
+      listaNC.innerHTML = `
+        <div class="card">
+          Durante a ronda setorial, não foram identificadas não conformidades relacionadas ao uso, manuseio, armazenamento ou instalação de equipamentos médico-hospitalares no setor avaliado.
+        </div>
+      `;
+    }
+
+    salvar();
+  }
+}
+function adicionarNC(){
+
+
+if(rondas[setorAtual].finalizado) return;
+  let r = rondas[setorAtual];
+
+  let f = fotoNC.files[0];
+  if(!f) return;
+
+  let reader = new FileReader();
+
+  reader.onload = e => {
+
+    r.naoConformidades.push({
+      foto: e.target.result,
+      descricao: descricaoNC.value
+    });
+
+    renderNC();
+    salvar();
+    limparNC();
+  };
+
+  reader.readAsDataURL(f);
+}
+function renderNC(){
+
+  let r = rondas[setorAtual];
+
+  listaNC.innerHTML = r.naoConformidades.map((n, index) => `
+    <div class="card">
+
+      <img src="${n.foto}"
+           style="width:250px;max-width:100%;border-radius:8px;display:block;margin:auto;">
+
+      <p>${n.descricao}</p>
+
+      <button onclick="editarNC(${index})"
+        style="width:auto;background:#ffb300;color:#fff;margin-right:5px;">
+        ✏️ Editar
+      </button>
+
+      <button onclick="excluirNC(${index})"
+        style="width:auto;background:#e53935;color:#fff;">
+        🗑️ Excluir
+      </button>
+
+    </div>
+  `).join('');
+}
+
+function abrirResumo(){
+
+  let r = rondas[setorAtual];
+
+  let h = `
+    <div class="card">
+      <b>Setor:</b> ${setorAtual}<br>
+      <b>Início:</b> ${r.inicio}
+      <b>Fim:</b> ${r.final}<br>
+    </div>
+  `;
+
+  // =========================
+  // 1. EQUIPAMENTOS
+  // =========================
+  h += `
+    <h3>1. Equipamentos com Necessidade de Intervenção Técnica</h3>
+  `;
+
+  if(r.equipamentos.length > 0){
+
+    r.equipamentos.forEach(e=>{
+      h += `
+        <div class="card">
+          <b>Nome:</b> ${e.nome}<br>
+          <b>Patrimônio:</b> ${e.patrimonio}<br>
+          <b>Série:</b> ${e.serie}<br>
+          <b>Falha apresentada:</b> ${e.falha}
+        </div>
+      `;
+    });
+
+  } else {
+
+    h += `
+      <div class="card">
+        Durante a realização da ronda setorial, não foram identificados equipamentos com necessidade de reparo ou recolhimento pelo setor de Engenharia Clínica. Da mesma forma, não foi relatada pela equipe do setor qualquer necessidade de intervenção nos equipamentos médico-hospitalares no momento da inspeção.
+      </div>
+    `;
+  }
+
+  // =========================
+  // 2. NÃO CONFORMIDADES
+  // =========================
+  h += `
+    <h3>2. Inspeção de Conformidade dos Equipamentos Médico-Hospitalares</h3>
+  `;
+
+  if(r.naoConformidades.length > 0){
+
+    r.naoConformidades.forEach(n=>{
+      h += `
+        <div class="card">
+          <b>Não conformidade:</b> ${n.descricao}<br><br>
+          <img src="${n.foto}"
+     style="
+       width:280px;
+       max-width:100%;
+       border-radius:8px;
+       display:block;
+       margin:auto;
+     ">
+        </div>
+      `;
+    });
+
+  } else {
+
+    h += `
+      <div class="card">
+        No momento da ronda setorial, não foram identificadas não conformidades relacionadas ao uso, manuseio, instalação, conservação ou armazenamento dos equipamentos médico-hospitalares. Todos os equipamentos avaliados encontravam-se em conformidade com as condições observadas durante a inspeção.
+      </div>
+    `;
+  }
+
+  // =========================
+  // 3. OBSERVAÇÕES GERAIS
+  // =========================
+  h += `
+    <h3>3. Observações Gerais</h3>
+
+    <div class="card">
+      
+      Quando houver recolhimento de algum equipamento durante a ronda setorial para reparo, ou necessidade de intervenção técnica no próprio setor, será aberta uma Ordem de Serviço no sistema Arkmeds (digit.arkmeds.com.br), garantindo o devido registro, acompanhamento e rastreabilidade das intervenções realizadas.
+    </div>
+
+    <div class="card">
+      
+      A documentação referente à ronda setorial será disponibilizada no sistema Arkmeds  em até 1 (um) dia útil após sua realização, assegurando a rastreabilidade das inspeções e das intervenções necessárias, especialmente nos casos em que forem identificadas não conformidades durante a ronda.
+    </div>
+  `;
+
+
+h += `
+  <h3>4. Assinaturas</h3>
+
+  <div class="card" style="text-align:center">
+
+    <div style="margin-bottom:25px">
+      <img src="${r.assinaturas.tecnico}" style="max-width:300px; border-bottom:1px solid #ccc;"><br>
+      <span>${r.assinantes?.tecnico?.nome || "Não informado"}</span><br>
+      <small>${r.assinantes?.tecnico?.funcao || ""}</small>
+    </div>
+
+    <div style="margin-bottom:25px">
+      <img src="${r.assinaturas.setor}" style="max-width:300px; border-bottom:1px solid #ccc;"><br>
+      <b>Responsável do Setor</b><br>
+      <span>${r.assinantes?.setor?.nome || "Não informado"}</span><br>
+      <small>${r.assinantes?.setor?.funcao || ""}</small><br>
+  
+    </div>
+
+    <div style="margin-bottom:25px">
+      <img src="${r.assinaturas.engenharia}" style="max-width:300px; border-bottom:1px solid #ccc;"><br>
+      <span>${r.assinantes?.engenharia?.nome || "Juliana Coelho"}</span><br>
+      <small>${r.assinantes?.engenharia?.funcao || "Coordenação de Engenharia Clínica"}</small>
+    </div>
+
+  </div>
+`;
+
+  resumoCompleto.innerHTML = `<div class="resumo-texto">${h}</div>`;
+  trocarTela('telaResumo');
+}
+
+function assinar(tipo){
+
+  let r = rondas[setorAtual];
+  if(!r) return;
+
+  let canvasId =
+    tipo === "tecnico" ? "c1" :
+    tipo === "setor" ? "c2" :
+    "c3";
+
+  // 🔒 bloqueia SOMENTE c1 e c2 se finalizado
+  if(r.finalizado === true && (tipo === "tecnico" || tipo === "setor")){
+    mostrarToast("Ronda finalizada. Não é possível alterar essa assinatura.");
+    return;
+  }
+
+  let canvas = document.getElementById(canvasId);
+
+  r.assinaturas[tipo] = canvas.toDataURL("image/png");
+
+  r.assinantes = r.assinantes || {};
+
+  if(tipo === "setor"){
+    r.assinantes.setor = {
+      nome: document.getElementById("nomeSetor").value,
+      funcao: document.getElementById("funcSetor").value,
+      data: new Date().toLocaleString(),
+      setor: setorAtual
+    };
+  }
+
+  if(tipo === "tecnico"){
+    r.assinantes.tecnico = {
+      nome: "Diego",
+      funcao: "Técnico em Equipamentos Biomédicos"
+    };
+  }
+
+  if(tipo === "engenharia"){
+    r.assinantes.engenharia = {
+      nome: "Juliana Coelho",
+      funcao: "Coordenadora de Engenharia Clínica"
+    };
+  }
+
+  salvar();
+  mostrarToast("Assinatura salva com sucesso!");
+
+  if(
+    r.assinaturas.tecnico &&
+    r.assinaturas.setor &&
+    r.assinaturas.engenharia
+  ){
+    statusRonda.innerText = "RONDA CONCLUÍDA";
+    statusRonda.style.background = "green";
+  }
+}
+function salvar(){
+
+  localStorage.setItem("rondas", JSON.stringify(rondas));
+
+  localStorage.setItem(
+    "dataRonda",
+    new Date().toLocaleDateString()
+  );
+}
+
+window.onload = () => {
+
+  verificarNovaData();
+
+  let data = localStorage.getItem("rondas");
+
+  rondas = data ? JSON.parse(data) : {};
+
+  atualizarSetores();
+};
+
+function voltarInicio() {
+    trocarTela('telaSetores');
+}
+
+function atualizarSetores(){
+
+  document.querySelectorAll(".setor").forEach(div => {
+
+    let nome = div.getAttribute("onclick")
+      .match(/'([^']+)'/)[1];
+
+    let r = rondas[nome];
+
+    let html = nome;
+
+    if(r){
+
+      html += `<br><small><b>Início:</b> ${r.inicio}</small>`;
+
+      if(r.final){
+        html += `<br><small><b>Final:</b> ${r.final}</small>`;
+      }
+
+      if(r.finalizado){
+        html += `<br><small style="color:green"><b>✓ CONCLUÍDA</b></small>`;
+      }
+    }
+
+    div.innerHTML = html;
+
+  });
+
+}
+
+
+
+function finalizarRonda(){
+
+  let r = rondas[setorAtual];
+
+  r.final = new Date().toLocaleString();
+  r.finalizado = true;
+
+  salvar();
+
+  abrirResumo();
+  atualizarSetores();
+
+  // bloqueia apenas os botões de adicionar
+  document.querySelector("#formEquipamento button").disabled = true;
+  document.querySelector("#formNC button").disabled = true;
+
+  
+
+  mostrarToast("Ronda finalizada com sucesso!");
+}
+
+
+function mostrarToast(msg){
+
+  let t = document.getElementById("toast");
+  t.innerText = msg;
+  t.classList.add("show");
+
+  setTimeout(()=>{
+    t.classList.remove("show");
+  }, 2500);
+}
+
+function limparEquipamento(){
+  nomeEquip.value = "";
+  patrimonioEquip.value = "";
+  serieEquip.value = "";
+  falhaEquip.value = "";
+}
+
+function limparNC(){
+  fotoNC.value = "";
+  descricaoNC.value = "";
+}
+
+
+
+function iniciarCanvasAssinaturas(){
+
+  ["c1","c2","c3"].forEach(id=>{
+
+    let canvas = document.getElementById(id);
+
+    canvas.width = canvas.clientWidth || 300;
+    canvas.height = 150;
+
+    let ctx = canvas.getContext("2d");
+
+    let desenhando = false;
+
+    canvas.addEventListener("pointerdown", e=>{
+      desenhando = true;
+
+      const rect = canvas.getBoundingClientRect();
+
+      ctx.beginPath();
+      ctx.moveTo(
+        e.clientX - rect.left,
+        e.clientY - rect.top
+      );
+    });
+
+    canvas.addEventListener("pointermove", e=>{
+
+      if(!desenhando) return;
+
+      const rect = canvas.getBoundingClientRect();
+
+      ctx.lineWidth = 2;
+      ctx.lineCap = "round";
+
+      ctx.lineTo(
+        e.clientX - rect.left,
+        e.clientY - rect.top
+      );
+
+      ctx.stroke();
+
+    });
+
+    canvas.addEventListener("pointerup", ()=>{
+      desenhando = false;
+    });
+
+  });
+
+}
+
+function abrirAssinaturas(){
+
+  trocarTela('telaAssinaturas');
+
+  setTimeout(() => {
+
+    configurarCanvas("c1");
+    configurarCanvas("c2");
+    configurarCanvas("c3");
+
+    let r = rondas[setorAtual];
+
+    if(r){
+
+      carregarAssinatura("c1", r.assinaturas.tecnico);
+      carregarAssinatura("c2", r.assinaturas.setor);
+      carregarAssinatura("c3", r.assinaturas.engenharia);
+
+    }
+
+  }, 300);
+
+}
+
+function configurarCanvas(id){
+
+  const canvas = document.getElementById(id);
+
+  canvas.width = window.innerWidth - 40;
+  canvas.height = 150;
+
+  const ctx = canvas.getContext("2d");
+
+  let desenhando = false;
+
+  canvas.onpointerdown = function(e){
+
+    desenhando = true;
+
+    const rect = canvas.getBoundingClientRect();
+
+    ctx.beginPath();
+    ctx.moveTo(
+      e.clientX - rect.left,
+      e.clientY - rect.top
+    );
+
+  };
+
+  canvas.onpointermove = function(e){
+
+    if(!desenhando) return;
+
+    const rect = canvas.getBoundingClientRect();
+
+    ctx.lineWidth = 2;
+    ctx.lineCap = "round";
+
+    ctx.lineTo(
+      e.clientX - rect.left,
+      e.clientY - rect.top
+    );
+
+    ctx.stroke();
+
+  };
+
+  canvas.onpointerup = function(){
+    desenhando = false;
+  };
+
+  canvas.onpointerleave = function(){
+    desenhando = false;
+  };
+
+}
+
+
+function carregarAssinatura(canvasId, imagem){
+
+  if(!imagem) return;
+
+  const canvas = document.getElementById(canvasId);
+  const ctx = canvas.getContext("2d");
+
+  const img = new Image();
+
+  img.onload = function(){
+    ctx.drawImage(img,0,0,canvas.width,canvas.height);
+  };
+
+  img.src = imagem;
+
+}
+
+function limparCanvas(id){
+
+  let r = rondas[setorAtual];
+  if(!r) return;
+
+  // 🔒 bloqueia SOMENTE se finalizado for true
+  if(r.finalizado === true && (id === "c1" || id === "c2")){
+    mostrarToast("Ronda finalizada. Não é possível alterar assinatura.");
+    return;
+  }
+
+  const canvas = document.getElementById(id);
+  const ctx = canvas.getContext("2d");
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  if(id === "c1") r.assinaturas.tecnico = "";
+  if(id === "c2") r.assinaturas.setor = "";
+  if(id === "c3") r.assinaturas.engenharia = "";
+
+  salvar();
+
+  mostrarToast("Assinatura apagada");
+}
+
+function salvarResponsavelSetor(){
+
+  let r = rondas[setorAtual];
+
+  if(!r.assinantes) r.assinantes = {};
+
+  r.assinantes.setor = {
+    nome: document.getElementById("nomeSetor").value,
+    funcao: document.getElementById("funcSetor").value,
+    setor: setorAtual
+  };
+
+  salvar();
+  mostrarToast("Responsável do setor salvo!");
+}
+
+async function gerarPDF(){
+
+  const r = rondas[setorAtual];
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF('p', 'mm', 'a4');
+
+  let y = 30;
+  let pagina = 1;
+
+  const emailEngenharia = "engenharia@hlaureano.org.br";
+
+  const corVerde = [46, 125, 50];
+
+  // ================= HEADER =================
+const header = () => {
+
+  // fundo branco
+  doc.setFillColor(255, 255, 255);
+  doc.rect(0, 0, 210, 25, "F");
+
+  // linha inferior verde
+  doc.setDrawColor(46, 125, 50);
+  doc.setLineWidth(0.8);
+  doc.line(0, 25, 210, 25);
+
+  // LOGO
+  if (logoHospital) {
+    const imgProps = doc.getImageProperties(logoHospital);
+
+    const logoW = 24;
+    const logoH = (imgProps.height * logoW) / imgProps.width;
+
+    doc.addImage(logoHospital, "PNG", 8, 3, logoW, logoH);
+  }
+
+  // TEXTO
+  doc.setTextColor(46, 125, 50);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(13);
+
+  doc.text("HOSPITAL NAPOLEÃO LAUREANO", 105, 10, {
+    align: "center"
+  });
+
+  doc.setFontSize(10);
+  doc.text("RONDA SETORIAL - ENGENHARIA CLÍNICA", 105, 18, {
+    align: "center"
+  });
+
+
+  doc.setTextColor(0);
+};
+
+  // ================= FOOTER =================
+  const footer = (paginaAtual, totalPaginas) => {
+
+  doc.setDrawColor(200);
+  doc.line(10, 287, 200, 287);
+
+  doc.setFontSize(9);
+  doc.setTextColor(80);
+
+  doc.text(
+  `${emailEngenharia} | Tel: (83) 2015-6257`,
+  10,
+  292
+);
+
+  doc.text(
+    `Página ${paginaAtual} de ${totalPaginas}`,
+    200,
+    292,
+    { align: "right" }
+  );
+
+  doc.setTextColor(0);
+};
+
+  const newPage = () => {
+  doc.addPage();
+  pagina++;
+  y = 30;
+};
+
+  header();
+
+  // ================= FUNÇÃO TEXTO JUSTIFICADO =================
+  const addText = (text) => {
+  y = addJustifiedText(doc, text, 10, y, 190, 6) + 3;
+};
+
+const LIMITE_Y = 260;
+
+function addJustifiedText(doc, text, x, y, maxWidth, lineHeight = 6) {
+
+  const lines = doc.splitTextToSize(text, maxWidth);
+
+  lines.forEach((line, index) => {
+
+    if (y > LIMITE_Y) {
+      newPage();
+    }
+
+    const words = line.split(" ");
+    const lineWidth = doc.getTextWidth(line);
+
+    if (
+      words.length === 1 ||
+      lineWidth < maxWidth * 0.75 ||
+      index === lines.length - 1
+    ) {
+      doc.text(line, x, y);
+      y += lineHeight;
+      return;
+    }
+
+    const spaceWidth = doc.getTextWidth(" ");
+    const extraSpace = (maxWidth - lineWidth) / (words.length - 1);
+
+    let cursorX = x;
+
+    words.forEach((word) => {
+      doc.text(word, cursorX, y);
+      cursorX += doc.getTextWidth(word) + spaceWidth + extraSpace;
+    });
+
+    y += lineHeight;
+  });
+
+  return y;
+}
+
+
+function verificarEspaco(alturaNecessaria){
+
+  if(y + alturaNecessaria > LIMITE_Y){
+    newPage();
+  }
+
+}
+
+  // ================= DADOS GERAIS =================
+// ================= DADOS GERAIS =================
+
+doc.setFillColor(248, 248, 248);
+doc.roundedRect(10, y - 2, 190, 22, 2, 2, "F");
+
+doc.setFont("helvetica", "bold");
+doc.setFontSize(10);
+doc.setTextColor(...corVerde);
+
+doc.text("INFORMAÇÕES DA RONDA", 12, y + 3);
+
+doc.setTextColor(0);
+
+// linha separadora
+doc.setDrawColor(220);
+doc.line(12, y + 5, 198, y + 5);
+
+// SETOR
+doc.setFont("helvetica", "bold");
+doc.text("Setor:", 15, y + 12);
+
+doc.setFont("helvetica", "normal");
+doc.text(setorAtual, 30, y + 12);
+
+// INÍCIO
+doc.setFont("helvetica", "bold");
+doc.text("Início:", 85, y + 12);
+
+doc.setFont("helvetica", "normal");
+doc.text(r.inicio, 102, y + 12);
+
+// FIM
+doc.setFont("helvetica", "bold");
+doc.text("Fim:", 15, y + 18);
+
+doc.setFont("helvetica", "normal");
+doc.text(
+  r.final || "Em andamento",
+  30,
+  y + 18
+);
+
+y += 30;
+
+  // ================= SEÇÃO 1 =================
+  // ================= SEÇÃO 1 =================
+y += 6;
+
+doc.setFont("helvetica", "bold");
+doc.setFontSize(12);
+doc.setTextColor(...corVerde);
+
+// barra lateral
+doc.setFillColor(46, 125, 50);
+doc.rect(10, y - 5, 2, 8, "F");
+
+doc.text(
+  "1. Equipamentos com Necessidade de Intervenção Técnica",
+  14,
+  y
+);
+
+doc.setTextColor(0);
+y += 10;
+
+if(r.equipamentos.length === 0){
+
+  addText(
+    "Durante a realização da ronda setorial, não foram identificados equipamentos com necessidade de reparo ou recolhimento pelo setor de Engenharia Clínica. Da mesma forma, não foi relatada pela equipe do setor qualquer necessidade de intervenção nos equipamentos médico-hospitalares no momento da inspeção."
+  );
+
+} else {
+
+  r.equipamentos.forEach((e, i) => {
+
+    const falhaLinhas = doc.splitTextToSize(
+      e.falha || "-",
+      180
+    );
+
+    const alturaBloco =
+      25 + (falhaLinhas.length * 5);
+
+    verificarEspaco(alturaBloco + 10);
+
+    // TÍTULO DO ITEM
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(...corVerde);
+    doc.setFontSize(10);
+
+    doc.text(
+      `EQUIPAMENTO ${i + 1}`,
+      10,
+      y
+    );
+
+    y += 6;
+
+    // DADOS
+    doc.setTextColor(0);
+
+    doc.setFont("helvetica", "bold");
+    doc.text("Equipamento:", 10, y);
+
+    doc.setFont("helvetica", "normal");
+    doc.text(e.nome || "-", 40, y);
+
+    y += 5;
+
+    doc.setFont("helvetica", "bold");
+    doc.text("Patrimônio:", 10, y);
+
+    doc.setFont("helvetica", "normal");
+    doc.text(e.patrimonio || "-", 40, y);
+
+    y += 5;
+
+    doc.setFont("helvetica", "bold");
+    doc.text("Série:", 10, y);
+
+    doc.setFont("helvetica", "normal");
+    doc.text(e.serie || "-", 40, y);
+
+    y += 7;
+
+    // FALHA
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(...corVerde);
+
+    doc.text(
+      "FALHA APRESENTADA",
+      10,
+      y
+    );
+
+    y += 5;
+
+    doc.setTextColor(0);
+    doc.setFont("helvetica", "normal");
+
+    y = addJustifiedText(
+      doc,
+      e.falha || "-",
+      10,
+      y,
+      180,
+      5
+    );
+
+    // LINHA SEPARADORA
+    y += 3;
+
+    doc.setDrawColor(220);
+    doc.line(10, y, 200, y);
+
+    y += 8;
+  });
+
+}
+
+// ================= SEÇÃO 2 =================
+y += 8; // 👈 espaço antes da seção
+doc.setFont("helvetica", "bold");
+doc.setFontSize(12);
+doc.setTextColor(...corVerde);
+
+// barra lateral opcional
+doc.setFillColor(46, 125, 50);
+doc.rect(10, y - 5, 2, 8, "F");
+
+doc.text("2. Não Conformidades", 14, y);
+
+doc.setTextColor(0);
+y += 10;
+
+if(r.naoConformidades.length === 0){
+
+  addText(
+    "Durante a ronda setorial, não foram identificadas não conformidades relacionadas ao uso, manuseio, armazenamento ou instalação de equipamentos médico-hospitalares no setor avaliado."
+  );
+
+} else {
+
+  for(let i = 0; i < r.naoConformidades.length; i++){
+
+    let n = r.naoConformidades[i];
+
+    // ================= TÍTULO =================
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(11);
+    doc.setTextColor(...corVerde);
+
+    doc.text(`NÃO CONFORMIDADE ${i + 1}`, 10, y);
+
+    doc.setTextColor(0);
+    y += 7;
+
+    // ================= IMAGEM =================
+    const imgW = 60;
+    const imgH = 40;
+
+    const alturaBase = imgH + 4; // ✔ mínimo fixo
+
+    // ================= TEXTO (calcula altura real) =================
+    const linhas = doc.splitTextToSize(
+      n.descricao || "",
+      110
+    );
+
+    const alturaTexto = linhas.length * 5;
+
+    // ✔ só cresce se texto for maior que a base
+    const alturaBloco = Math.max(alturaBase, alturaTexto + 20);
+
+    // ================= QUEBRA DE PÁGINA =================
+    if (y + alturaBloco > LIMITE_Y) {
+      newPage();
+    }
+
+    // ================= FUNDO (SEM BORDA, LIMPO) =================
+    doc.setFillColor(255, 255, 255);
+    doc.rect(10, y, 190, alturaBloco, "F");
+
+    // ================= IMAGEM =================
+    if(n.foto){
+      doc.addImage(
+        n.foto,
+        "JPEG",
+        12,
+        y + 5,
+        imgW,
+        imgH
+      );
+    }
+
+    // ================= DESCRIÇÃO =================
+    doc.setTextColor(...corVerde);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(10);
+
+    doc.text("DESCRIÇÃO", 78, y + 10);
+
+    doc.setTextColor(0);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+
+    let yDescricao = y + 18;
+
+    yDescricao = addJustifiedText(
+      doc,
+      n.descricao || "",
+      78,
+      yDescricao,
+      110,
+      5
+    );
+
+    // ================= LEGENDA =================
+    doc.setFont("helvetica", "italic");
+    doc.setFontSize(9);
+
+    doc.text(
+      `Figura ${i + 1} – Evidência da não conformidade identificada durante a ronda setorial.`,
+      78,
+      yDescricao + 6,
+      { maxWidth: 110 }
+    );
+
+    // ================= AVANÇO =================
+    y += alturaBloco + 8;
+  }
+}
+// ================= OBS  =================
+y += 8;
+doc.setFont("helvetica", "bold");
+doc.setFontSize(12);
+doc.setTextColor(...corVerde);
+
+// barra lateral opcional
+doc.setFillColor(46, 125, 50);
+doc.rect(10, y - 5, 2, 8, "F");
+
+doc.text("3. Observações Gerais", 14, y);
+
+doc.setTextColor(0);
+y += 8;
+
+
+
+doc.setFont("helvetica", "normal");
+
+addText(
+"Quando houver recolhimento de algum equipamento durante a ronda setorial para reparo, ou necessidade de intervenção técnica no próprio setor, será aberta uma Ordem de Serviço no sistema Arkmeds (digit.arkmeds.com.br), garantindo o devido registro, acompanhamento e rastreabilidade das intervenções realizadas."
+);
+
+y += 3;
+
+addText(
+"A documentação referente à ronda setorial será disponibilizada no sistema Arkmeds até 1 (um) dia útil após sua realização, assegurando a rastreabilidade das inspeções e das intervenções necessárias, especialmente nos casos em que forem identificadas não conformidades durante a ronda."
+);
+
+y += 5;
+
+
+  // ================= ASSINATURAS =================
+
+  // altura necessária para o bloco
+const alturaAssinaturas = 75;
+
+// se não houver espaço suficiente, cria nova página
+if (y + alturaAssinaturas > 270) {
+  newPage();
+}
+
+doc.setTextColor(...corVerde);
+doc.setFont("helvetica", "bold");
+
+verificarEspaco(75);
+doc.text("4. Assinaturas", 10, y);
+
+doc.setTextColor(0);
+y += 10;
+
+// largura de cada coluna
+const colW = 60;
+const startX = 10;
+
+// altura fixa do bloco
+const boxY = y;
+
+// ================= TECNICO =================
+drawAssinatura(0, "Técnico", r.assinantes?.tecnico, r.assinaturas.tecnico);
+
+// ================= SETOR =================
+drawAssinatura(1, "Responsável do Setor", r.assinantes?.setor, r.assinaturas.setor);
+
+// ================= ENGENHARIA =================
+drawAssinatura(2, "Engenharia Clínica", r.assinantes?.engenharia, r.assinaturas.engenharia);
+
+// avança linha depois da tabela
+y += 70;
+
+
+// ================= FUNÇÃO DA TABELA =================
+function drawAssinatura(index, titulo, dados, img){
+
+  let x = startX + (index * colW);
+
+  // caixa
+  doc.setDrawColor(200);
+  doc.rect(x, boxY, colW, 60);
+
+  // TITULO
+  
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(9);
+  doc.text(titulo, x + 30, boxY + 6, { align: "center" });
+
+  // IMAGEM
+  if(img){
+    doc.addImage(img, "PNG", x + 10, boxY + 10, 40, 20);
+  }
+
+  // NOME
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(8);
+  doc.text(
+    dados?.nome || "",
+    x + 30,
+    boxY + 40,
+    { align: "center", maxWidth: 55 }
+  );
+
+  // FUNÇÃO
+  doc.text(
+    dados?.funcao || "",
+    x + 30,
+    boxY + 46,
+    { align: "center", maxWidth: 55 }
+  );
+}
+
+  
+
+const totalPaginas = doc.getNumberOfPages();
+
+for (let i = 1; i <= totalPaginas; i++) {
+
+  doc.setPage(i);
+
+  // Cabeçalho
+  header();
+
+  // Rodapé
+  footer(i, totalPaginas);
+
+  // Marca d'água lateral
+  doc.setFontSize(8);
+  doc.setTextColor(150);
+
+  doc.text(
+    `RONDA SETORIAL | ${setorAtual} | ${new Date().toLocaleDateString('pt-BR')}`,
+    206,
+    150,
+    { angle: 90 }
+  );
+}
+
+doc.setTextColor(0);
+
+  doc.save(`Ronda_${setorAtual}.pdf`);
+}
+
+function verificarNovaData(){
+
+  const hoje = new Date().toLocaleDateString();
+
+  const dataSalva = localStorage.getItem("dataRonda");
+
+  if(dataSalva !== hoje){
+
+    localStorage.removeItem("rondas");
+
+    rondas = {};
+
+    localStorage.setItem("dataRonda", hoje);
+
+    mostrarToast("Nova data detectada. Rondas anteriores removidas.");
+
+    atualizarSetores();
+  }
+}
+
+function forcarNovoDia(){
+
+  localStorage.setItem(
+    "dataRonda",
+    "01/01/2000"
+  );
+
+  verificarNovaData();
+}
+
+function editarEquip(i){
+
+  let r = rondas[setorAtual];
+  let e = r.equipamentos[i];
+
+  nomeEquip.value = e.nome;
+  patrimonioEquip.value = e.patrimonio;
+  serieEquip.value = e.serie;
+  falhaEquip.value = e.falha;
+
+  // remove antigo para substituir depois
+  r.equipamentos.splice(i, 1);
+
+  salvar();
+  renderEquip();
+}
+
+function excluirEquip(i){
+
+  let r = rondas[setorAtual];
+
+  if(r.finalizado) return;
+
+  r.equipamentos.splice(i, 1);
+
+  salvar();
+  renderEquip();
+}
+
+function editarNC(i){
+
+  let r = rondas[setorAtual];
+  let n = r.naoConformidades[i];
+
+  descricaoNC.value = n.descricao;
+
+  // remove e refaz depois
+  r.naoConformidades.splice(i, 1);
+
+  salvar();
+  renderNC();
+}
+
+function excluirNC(i){
+
+  let r = rondas[setorAtual];
+
+  if(r.finalizado) return;
+
+  r.naoConformidades.splice(i, 1);
+
+  salvar();
+  renderNC();
+}
+
+function ajustarCanvas(canvas){
+
+  const rect = canvas.getBoundingClientRect();
+
+  // salva desenho atual
+  const ctx = canvas.getContext("2d");
+  const img = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+  canvas.width = rect.width;
+  canvas.height = rect.height;
+
+  ctx.putImageData(img, 0, 0);
+}
+
+
+window.addEventListener("resize", () => {
+  ["c1","c2","c3"].forEach(id => {
+    const canvas = document.getElementById(id);
+    if(canvas) ajustarCanvas(canvas);
+  });
+});
+
+
+
+
+
+</script>
+</body>
+</html>
