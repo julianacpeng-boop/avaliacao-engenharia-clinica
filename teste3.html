@@ -444,7 +444,7 @@ Testar Limpeza
 </div>
 
   <!-- BOTÃO FINALIZAR -->
-  <button class="btn-finalizar" onclick="finalizarRonda">
+  <button class="btn-finalizar" onclick="finalizarRonda()">
     <span class="material-icons">check_circle</span>
     Finalizar Ronda
   </button>
@@ -527,46 +527,42 @@ function trocarTela(id){
   document.querySelectorAll('.tela')
     .forEach(t => t.classList.remove('ativa'));
 
-  document.getElementById(id)
-    .classList.add('ativa');
+  const tela = document.getElementById(id);
 
-  // pega todos os elementos com setor
+  if(tela){
+    tela.classList.add('ativa');
+  } else {
+    console.warn("Tela não encontrada:", id);
+  }
+
   const elementos = document.querySelectorAll(".setorAtualTexto");
 
-  console.log("Elementos encontrados:", elementos.length);
-
   elementos.forEach(el => {
-    el.innerText = setorAtual;
+    el.innerText = setorAtual || "";
   });
 
   const menu = document.getElementById("menuInferior");
 
-  if(id === "telaSetores"){
-      menu.style.display = "none";
-  }else{
-      menu.style.display = "flex";
+  if(menu){
+    menu.style.display = (id === "telaSetores") ? "none" : "flex";
   }
 
-  // Remove o ativo de todos
-document.querySelectorAll("#menuInferior button")
-  .forEach(btn => btn.classList.remove("ativo"));
+  document.querySelectorAll("#menuInferior button")
+    .forEach(btn => btn.classList.remove("ativo"));
 
-// Marca o botão correto
-if(id === "telaEquipamentos"){
-    document.getElementById("btnEquip").classList.add("ativo");
-}
+  const mapa = {
+    telaEquipamentos: "btnEquip",
+    telaNC: "btnNC",
+    telaResumo: "btnResumo",
+    telaAssinaturas: "btnAssinatura"
+  };
 
-if(id === "telaNC"){
-    document.getElementById("btnNC").classList.add("ativo");
-}
+  const btnId = mapa[id];
 
-if(id === "telaResumo"){
-    document.getElementById("btnResumo").classList.add("ativo");
-}
-
-if(id === "telaAssinaturas"){
-    document.getElementById("btnAssinatura").classList.add("ativo");
-}
+  if(btnId){
+    const btn = document.getElementById(btnId);
+    if(btn) btn.classList.add("ativo");
+  }
 }
 
 function selecionarSetor(s){
